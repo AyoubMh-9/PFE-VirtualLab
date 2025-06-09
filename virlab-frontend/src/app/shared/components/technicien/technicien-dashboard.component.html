@@ -1,0 +1,375 @@
+<div class="dashboard-container">
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+        <div class="nav-brand">
+            <h2>Tableau de Bord - Technicien</h2>
+        </div>
+        <div class="nav-stats">
+            <div class="stat-item">
+                <span class="stat-number">{{ projectCountActif }}</span>
+                <span class="stat-label">Projets Actifs</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ projectCountNoActif }}</span>
+                <span class="stat-label">En Attente</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">25</span>
+                <span class="stat-label">Tâches</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ projectCountDone || 0 }}</span>
+                <span class="stat-label">Tests</span>
+            </div>
+        </div>
+        <div class="nav-user">
+            <button class="user-btn" (click)="showProfile()">
+                <span class="user-icon">👤</span>
+                Mon Profil
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="nav-menu">
+                <div class="nav-item" 
+                     [class.active]="currentView === ViewType.DASHBOARD"
+                     (click)="showDashboard()">
+                    <div class="nav-icon dashboard-icon">🏠</div>
+                    <span class="nav-text">Dashboard</span>
+                </div>
+                
+                <div class="nav-item" 
+                     [class.active]="currentView === ViewType.PROJECTS"
+                     (click)="showProjects()">
+                    <div class="nav-icon projects-icon">📋</div>
+                    <span class="nav-text">Projects</span>
+                    <span class="nav-badge" *ngIf="projectCountActif > 0">{{ projectCountActif }}</span>
+                </div>
+                
+                <div class="nav-item" 
+                     [class.active]="currentView === ViewType.TASKS"
+                     (click)="showTasks()">
+                    <div class="nav-icon tasks-icon">✅</div>
+                    <span class="nav-text">Tâches</span>
+                    <span class="nav-badge">25</span>
+                </div>
+                
+                <div class="nav-item" 
+                     [class.active]="currentView === ViewType.SUBTASKS"
+                     (click)="showSubTasks()">
+                    <div class="nav-icon subtasks-icon">📝</div>
+                    <span class="nav-text">Tâches à effectuer</span>
+                </div>
+                
+                <div class="nav-item" 
+                     [class.active]="currentView === ViewType.TESTS"
+                     (click)="showTests()">
+                    <div class="nav-icon tests-icon">🧪</div>
+                    <span class="nav-text">Résultats des tests</span>
+                </div>
+                
+                <div class="nav-item" 
+                     [class.active]="currentView === ViewType.REPORTS"
+                     (click)="showReports()">
+                    <div class="nav-icon reports-icon">📄</div>
+                    <span class="nav-text">Les Rapports</span>
+                    <span class="nav-badge">15</span>
+                </div>
+            </div>
+
+            <!-- Quick Actions in Sidebar -->
+            <div class="sidebar-actions">
+                <h4>Actions rapides</h4>
+                <button class="action-btn primary" (click)="showTasks()">
+                    <span class="action-icon">➕</span>
+                    Nouvelle tâche
+                </button>
+                <button class="action-btn secondary" (click)="uploadReport()">
+                    <span class="action-icon">📤</span>
+                    Upload rapport
+                </button>
+                <button class="action-btn success" (click)="showTests()">
+                    <span class="action-icon">🚀</span>
+                    Lancer test
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- DASHBOARD VIEW -->
+            <div *ngIf="currentView === ViewType.DASHBOARD" class="content-section">
+                <div class="section-header">
+                    <h1>Bienvenue, Technicien</h1>
+                    <p>Vue d'ensemble de vos projets et tâches</p>
+                </div>
+
+                <div class="dashboard-overview">
+                    <div class="overview-cards">
+                        <div class="overview-card projects-card">
+                            <div class="card-icon">📋</div>
+                            <div class="card-content">
+                                <h3>Projects</h3>
+                                <p>{{ projectCountActif + projectCountNoActif }} projets au total</p>
+                                <div class="card-stats">
+                                    <span class="stat-active">{{ projectCountActif }} actifs</span>
+                                    <span class="stat-pending">{{ projectCountNoActif }} en attente</span>
+                                </div>
+                            </div>
+                            <button class="card-btn" (click)="showProjects()">Voir tous</button>
+                        </div>
+
+                        <div class="overview-card tasks-card">
+                            <div class="card-icon">✅</div>
+                            <div class="card-content">
+                                <h3>Tâches</h3>
+                                <p>25 tâches assignées</p>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            <button class="card-btn" (click)="showTasks()">Gérer</button>
+                        </div>
+
+                        <div class="overview-card tests-card">
+                            <div class="card-icon">🧪</div>
+                            <div class="card-content">
+                                <h3>Tests</h3>
+                                <p>{{ projectCountDone }} tests terminés</p>
+                                <div class="card-stats">
+                                    <span class="stat-success">{{ projectCountDone }} réussis</span>
+                                </div>
+                            </div>
+                            <button class="card-btn" (click)="showTests()">Résultats</button>
+                        </div>
+
+                        <div class="overview-card reports-card">
+                            <div class="card-icon">📄</div>
+                            <div class="card-content">
+                                <h3>Rapports</h3>
+                                <p>15 rapports disponibles</p>
+                                <div class="card-actions">
+                                    <button class="mini-btn" (click)="showReports()">Voir</button>
+                                    <button class="mini-btn upload" (click)="uploadReport()">Upload</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJECTS VIEW -->
+            <div *ngIf="currentView === ViewType.PROJECTS" class="content-section">
+                <div class="section-header">
+                    <h1>Mes Projets</h1>
+                    <p>Gestion et suivi de vos projets assignés</p>
+                </div>
+
+                <!-- Loading state -->
+                <div *ngIf="projectsLoading" class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Chargement des projets...</p>
+                </div>
+
+                <!-- Error state -->
+                <div *ngIf="projectsError && !projectsLoading" class="error-state">
+                    <div class="error-icon">⚠️</div>
+                    <div class="error-message">{{ projectsError }}</div>
+                    <button (click)="loadProjects()" class="retry-btn">Réessayer</button>
+                </div>
+
+                <!-- Projects Content -->
+                <div *ngIf="!projectsLoading && !projectsError" class="data-content">
+                    <div *ngIf="projects.length > 0; else noProjects" class="projects-grid">
+                        <div *ngFor="let project of projects; trackBy: trackByProjectId" class="project-card">
+                            <div class="project-header">
+                                <h3 class="project-title">{{ project.nomProduct }}</h3>
+                                <span class="project-status" [ngClass]="getStatusClass(project.status)">
+                                    {{ project.status }}
+                                </span>
+                            </div>
+                            <div class="project-body">
+                                <p class="project-description">{{ project.description || 'Aucune description disponible' }}</p>
+                            </div>
+                            <div class="project-footer">
+                                <button class="project-btn primary" (click)="viewProjectDetails(project)">
+                                    Voir détails
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-template #noProjects>
+                        <div class="empty-state">
+                            <div class="empty-icon">📋</div>
+                            <h3>Aucun projet assigné</h3>
+                            <p>Vous n'avez aucun projet assigné pour le moment.</p>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+
+            <!-- TASKS VIEW -->
+            <div *ngIf="currentView === ViewType.TASKS" class="content-section">
+                <div class="section-header">
+                    <h1>Mes Tâches</h1>
+                    <p>Gestion de vos tâches assignées</p>
+                </div>
+
+                <!-- Loading state -->
+                <div *ngIf="tasksLoading" class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Chargement des tâches...</p>
+                </div>
+
+                <!-- Tasks Content -->
+                <div *ngIf="!tasksLoading" class="data-content">
+                    <div *ngIf="tasks.length > 0; else noTasks" class="tasks-list">
+                        <div *ngFor="let task of tasks; trackBy: trackByTaskId" class="task-item">
+                            <div class="task-content">
+                                <div class="task-header">
+                                    <h4 class="task-title">{{ task.title }}</h4>
+                                    <span class="task-status" [ngClass]="getStatusClass(task.status)">
+                                        {{ task.status }}
+                                    </span>
+                                </div>
+                                <p class="task-description">{{ task.description }}</p>
+                            </div>
+                            <div class="task-actions">
+                                <button class="task-btn" (click)="viewTaskDetails(task)">
+                                    Détails
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-template #noTasks>
+                        <div class="empty-state">
+                            <div class="empty-icon">✅</div>
+                            <h3>Aucune tâche</h3>
+                            <p>Vous n'avez aucune tâche assignée pour le moment.</p>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+
+            <!-- SUBTASKS VIEW -->
+            <div *ngIf="currentView === ViewType.SUBTASKS" class="content-section">
+                <div class="section-header">
+                    <h1>Tâches à effectuer</h1>
+                    <p>Gestion des tâches et sous-tâches</p>
+                </div>
+                <div class="content-placeholder">
+                    <p>Section en cours de développement...</p>
+                </div>
+            </div>
+
+            <!-- TESTS VIEW -->
+            <div *ngIf="currentView === ViewType.TESTS" class="content-section">
+                <div class="section-header">
+                    <h1>Résultats des Tests</h1>
+                    <p>Consultation et analyse des résultats de tests</p>
+                </div>
+
+                <!-- Loading state -->
+                <div *ngIf="testsLoading" class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Chargement des tests...</p>
+                </div>
+
+                <!-- Tests Content -->
+                <div *ngIf="!testsLoading" class="data-content">
+                    <div *ngIf="tests.length > 0; else noTests" class="tests-grid">
+                        <div *ngFor="let test of tests; trackBy: trackByTestId" class="test-card">
+                            <div class="test-header">
+                                <h4 class="test-name">{{ test.name }}</h4>
+                                <span class="test-result" [ngClass]="getStatusClass(test.result)">
+                                    {{ test.result }}
+                                </span>
+                            </div>
+                            <div class="test-info">
+                                <p class="test-date">📅 {{ test.date }}</p>
+                            </div>
+                            <div class="test-actions">
+                                <button class="test-btn" (click)="viewTestDetails(test)">
+                                    Voir détails
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-template #noTests>
+                        <div class="empty-state">
+                            <div class="empty-icon">🧪</div>
+                            <h3>Aucun test</h3>
+                            <p>Aucun test disponible pour le moment.</p>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+
+            <!-- REPORTS VIEW -->
+            <div *ngIf="currentView === ViewType.REPORTS" class="content-section">
+                <div class="section-header">
+                    <h1>Les Rapports</h1>
+                    <p>Gestion de vos rapports techniques</p>
+                    <button class="header-btn primary" (click)="uploadReport()">
+                        <span class="btn-icon">📤</span>
+                        Uploader un rapport
+                    </button>
+                </div>
+
+                <!-- Loading state -->
+                <div *ngIf="reportsLoading" class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Chargement des rapports...</p>
+                </div>
+
+                <!-- Reports Content -->
+                <div *ngIf="!reportsLoading" class="data-content">
+                    <div *ngIf="reports.length > 0; else noReports" class="reports-list">
+                        <div *ngFor="let report of reports; trackBy: trackByReportId" class="report-item">
+                            <div class="report-icon">📄</div>
+                            <div class="report-content">
+                                <h4 class="report-name">{{ report.name }}</h4>
+                                <div class="report-meta">
+                                    <span class="report-type">{{ report.type }}</span>
+                                    <span class="report-date">{{ report.date }}</span>
+                                </div>
+                            </div>
+                            <div class="report-actions">
+                                <button class="report-btn download" (click)="downloadReport(report)">
+                                    <span class="btn-icon">⬇️</span>
+                                    Télécharger
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-template #noReports>
+                        <div class="empty-state">
+                            <div class="empty-icon">📄</div>
+                            <h3>Aucun rapport</h3>
+                            <p>Aucun rapport disponible pour le moment.</p>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+
+            <!-- PROFILE VIEW -->
+            <div *ngIf="currentView === ViewType.PROFILE" class="content-section">
+                <div class="section-header">
+                    <h1>Mon Profil</h1>
+                    <p>Gestion de vos informations personnelles</p>
+                </div>
+                <div class="content-placeholder">
+                    <p>Section profil en cours de développement...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

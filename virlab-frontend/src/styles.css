@@ -1,0 +1,68 @@
+/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+
+/* Global CSS Variables */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --border-color: #e0e0e0;
+  --success-gradient: linear-gradient(to right, #28a745, #218838); /* Green gradient */
+  --warning-gradient: linear-gradient(to right, #ffc107, #e0a800); /* Yellow gradient */
+  --danger-gradient: linear-gradient(to right, #dc3545, #c82333); /* Red gradient */
+  --low-progress-gradient: var(--danger-gradient);    /* Less than 25% */
+  --medium-progress-gradient: var(--warning-gradient); /* 25% to 74% */
+  --high-progress-gradient: var(--success-gradient);  /* 75% and above */
+    --dark-bg: #1a1a2e;
+    --dark-secondary: #16213e;
+    --dark-accent: #0f3460;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --white: #ffffff;
+    --light-bg: #f8fafc;
+    --border-color: #e2e8f0;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --primary-color: #003366; /* Bleu foncé Nicomatic */
+      --primary-light: #004080;
+      --accent-color: #D32F2F; /* Rouge Nicomatic (utilisé pour les erreurs) */
+      --text-color: #333333;
+      --text-light: #666666;
+      --border-color: #E0E0E0;
+      --background-light: #F5F7FA;
+      --white: #FFFFFF;
+      --error-bg: #FFEBEE;
+      --success-bg: #E8F5E9;
+      --gradient-start: #003366;
+      --gradient-end: #001a33;
+      --primary-blue: #007bff; /* Vibrant Blue */
+      --secondary-blue: #0056b3; /* Darker Blue */
+      --white: #FFFFFF;
+      --light-gray: #F8F9FA;
+      --dark-gray: #343A40;
+      --text-color: #495057;
+      --border-color: #DEE2E6;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --error-color: #DC3545;
+      --gradient-bg: linear-gradient(135deg, #E0F2F7 0%, #B3E0F2 30%, #80BFFF 100%); /* Light blue to a slightly darker blue */
+      --card-bg: rgba(255, 255, 255, 0.95); /* Slightly transparent white for cards */
+      --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Any other global styles, like body reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--light-bg); /* This will now work! */
+    color: var(--text-primary); /* This will now work! */
+    overflow-x: hidden;
+}
+
+/* ... rest of your global styles if any ... */

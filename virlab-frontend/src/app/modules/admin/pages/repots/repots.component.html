@@ -1,0 +1,65 @@
+<div class="p-6 max-w-5xl mx-auto">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">📂 Dashboard des fichiers (Admin)</h2>
+
+  <!-- Formulaire d'upload -->
+  <form (submit)="onUploadFile()" #uploadForm="ngForm" class="flex flex-col gap-4 p-4 border rounded-lg shadow-sm bg-gray-50 mb-6">
+    <div class="flex items-center gap-4">
+      <input type="file" name="file" (change)="onFileSelected($event)" required class="file-input file-input-bordered file-input-sm w-full max-w-xs" />
+      
+      <div class="flex flex-col gap-1">
+        <label class="font-medium text-gray-700">Sélectionner le projet :</label>
+        <select [(ngModel)]="selectedProjectId" name="projectId" required class="select select-bordered w-64">
+          <option *ngFor="let project of projects" [value]="project.id">{{ project.nomProduct }}</option>
+        </select>
+      </div>
+    </div>
+    <button type="submit" [disabled]="!selectedFile || !selectedProjectId" class="btn btn-primary w-32 self-end">
+      📤 Uploader
+    </button>
+  </form>
+
+  <!-- Filtres -->
+  <div class="flex flex-wrap gap-6 items-center mb-6">
+    <div class="flex flex-col">
+      <label class="font-medium text-gray-700">Filtrer par utilisateur :</label>
+      <select [(ngModel)]="filterUserId" (change)="applyFilter()" class="select select-sm select-bordered w-52">
+        <option [ngValue]="null">Tous</option>
+        <option *ngFor="let user of users" [ngValue]="user.id">{{ user.username }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="font-medium text-gray-700">Filtrer par projet :</label>
+      <select [(ngModel)]="filterProjectId" (change)="applyFilter()" class="select select-sm select-bordered w-52">
+        <option [ngValue]="null">Tous</option>
+        <option *ngFor="let project of projects" [ngValue]="project.id">{{ project.nomProduct }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Liste des fichiers -->
+  <div class="overflow-x-auto">
+    <table class="table table-zebra w-full text-sm">
+      <thead class="bg-gray-200 text-gray-800">
+        <tr>
+          <th>📄 Nom du fichier</th>
+          <th>👤 Uploader</th>
+          <th>📦 Projet</th>
+          <th>📅 Date d'upload</th>
+          <th>⬇️ Télécharger</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let file of displayedFiles">
+          <td>{{ file.fileName }}</td>
+          <td><span class="user-badge">{{ file.uploaderUsername }}</span></td>
+          <td><span class="project-badge">{{ file.projectName }}</span></td>
+          <td>{{ file.uploadTime | date:'short' }}</td>
+          <td>
+            <a (click)="downloadFile(file.id, file.fileName)" class="text-blue-600 hover:underline" style="cursor: pointer;">Télécharger</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

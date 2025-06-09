@@ -1,0 +1,40 @@
+<h1 class="welcome">Bienvenue, {{ username || 'Admin' }}</h1>
+
+<nav class="navbar">
+  <div class="brand">🔬 Virtual Lab</div>
+
+  <button class="hamburger" (click)="toggleMenu()" aria-label="Ouvrir le menu">
+    ☰
+  </button>
+
+  <div class="nav-links" [class.active]="menuActive">
+    <div class="dropdown">
+      <a class="dropdown-toggle" (click)="toggleUsersMenu()" tabindex="0" aria-haspopup="true" [attr.aria-expanded]="usersMenuOpen">
+        👤 Gérer les utilisateurs ▾
+      </a>
+
+      <div class="dropdown-menu" [class.show]="usersMenuOpen">
+        <a routerLink="users" routerLinkActive="active" (click)="selectMenu()">📄 Afficher</a>
+        <a routerLink="add" routerLinkActive="active" (click)="selectMenu()">➕ Ajouter</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <a class="dropdown-toggle" (click)="toggleProjectsMenu()" tabindex="0">
+        📂 Gérer les projets ▾
+      </a>
+      <div class="dropdown-menu" [class.show]="projectMenuOpen">
+        <a routerLink="projects" routerLinkActive="active" (click)="selectMenu()">📄 Afficher</a>
+        <a routerLink="add-project" routerLinkActive="active" (click)="selectMenu()">➕ Ajouter</a>
+      </div>
+    </div>
+
+
+    <a routerLink="reports" routerLinkActive="active" (click)="closeMenu()">📊 Rapports</a>
+    <a routerLink="settings" routerLinkActive="active" (click)="closeMenu()">⚙️ Paramètres</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>

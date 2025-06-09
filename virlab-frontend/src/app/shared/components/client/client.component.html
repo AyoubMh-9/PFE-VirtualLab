@@ -1,0 +1,463 @@
+<div class="dashboard-container">
+  <nav class="top-nav">
+    <div class="nav-brand">
+      <h2>Mon Dashboard</h2>
+    </div>
+    <div class="nav-actions">
+      <div class="user-profile" (click)="toggleUserMenu()">
+        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face&auto=format" alt="Profile" class="profile-img">
+        <span>Utilisateur</span>
+        <div class="notification-badge">3</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-layout">
+    <aside class="sidebar" [ngClass]="{'collapsed': sidebarCollapsed}">
+      <div class="sidebar-header">
+        <button class="toggle-btn" (click)="toggleSidebar()">
+          <span>{{sidebarCollapsed ? '→' : '☰'}}</span>
+        </button>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-item" [ngClass]="{'active': currentSection === 'projects'}" (click)="setActiveSection('projects'); clearSelections()">
+          <div class="nav-link">
+            <span class="icon">📋</span>
+            <span class="nav-text">Mes Projets</span>
+          </div>
+        </li>
+
+        <li class="nav-item" [ngClass]="{'active': currentSection === 'tests'}" (click)="setActiveSection('tests'); clearSelections()">
+          <div class="nav-link">
+            <span class="icon">🧪</span>
+            <span class="nav-text">Tests & Résultats</span>
+          </div>
+        </li>
+
+        <li class="nav-item" [ngClass]="{'active': currentSection === 'statistics'}" (click)="setActiveSection('statistics'); clearSelections(); loadProjects()">
+          <div class="nav-link">
+            <span class="icon">📊</span>
+            <span class="nav-text">Statistiques</span>
+          </div>
+        </li>
+
+        <li class="nav-item" [ngClass]="{'active': currentSection === 'chat'}" (click)="setActiveSection('chat'); clearSelections()">
+          <div class="nav-link">
+            <span class="icon">💬</span>
+            <span class="nav-text">Chat Technicien</span>
+          </div>
+        </li>
+
+        <li class="nav-item" [ngClass]="{'active': currentSection === 'joinProject'}" (click)="setActiveSection('joinProject'); clearSelections()">
+          <div class="nav-link">
+            <span class="icon">🔗</span>
+            <span class="nav-text">Rejoindre Projet</span>
+          </div>
+        </li>
+
+        <li class="nav-item" [ngClass]="{'active': currentSection === 'reports'}" (click)="setActiveSection('reports'); clearSelections()">
+          <div class="nav-link">
+            <span class="icon">📄</span>
+            <span class="nav-text">Rapports</span>
+          </div>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="content-header">
+        <h1>{{getSectionTitle()}}</h1>
+        <div class="breadcrumb">
+          <span>Dashboard</span>
+          <span>></span>
+          <span *ngIf="currentSection === 'projects'">Mes Projets</span>
+          <span *ngIf="currentSection === 'projects' && selectedProject"> > {{ selectedProject.nomProduct }}</span>
+          <span *ngIf="currentSection === 'projects' && selectedProject && selectedTestGroup"> > Groupe {{ selectedTestGroup.groupNumber }}</span>
+          <span *ngIf="currentSection === 'projects' && selectedProject && selectedTestGroup && selectedTest"> > {{ selectedTest.name }}</span>
+          <span *ngIf="currentSection !== 'projects'">{{getSectionTitle()}}</span>
+        </div>
+      </div>
+
+      <div class="content-body">
+        <div *ngIf="currentSection === 'projects'" class="section-content">
+          <div *ngIf="projectsLoading" class="loading-message">
+            Chargement de vos projets...
+          </div>
+          <div *ngIf="projectsError" class="error-message">
+            {{ projectsError }}
+          </div>
+          <div *ngIf="!projectsLoading && !projectsError && projects.length === 0" class="no-data-message">
+            Aucun projet trouvé pour ce client.
+          </div>
+
+          <div *ngIf="!selectedProject && !projectsLoading && !projectsError && projects.length > 0" class="projects-grid">
+            <div *ngFor="let project of projects" class="project-card">
+              <div class="card-header">
+                <h3>{{project.nomProduct}}</h3>
+                <span class="status" [ngClass]="getStatusClass(project.calculatedStatus)">{{project.calculatedStatus}}</span>
+                <p>Tests effectués: <strong>{{ project.totalTestsCount !== undefined ? project.totalTestsCount : 'N/A' }}</strong></p>
+              </div>
+              <div class="card-body">
+                <p class="project-description">{{project.description}}</p>
+                <div class="progress-bar">
+                    <div
+                        class="progress-fill"
+                        [style.width.%]="project.calculatedProgress"
+                        [ngClass]="getProgressBarGradientClass(project.calculatedProgress)">
+                    </div>
+                </div>
+                <p class="progress-text">{{project.calculatedProgress}}% Complété</p>
+                <p class="project-date">Début: {{ project.createdAt }}</p>
+              </div>
+              <div class="card-actions">
+                <button class="btn btn-secondary btn-sm" (click)="editProject(project.id)">
+                  ✏️ Modifier
+                </button>
+                <button class="btn btn-primary btn-sm" (click)="viewProjectDetails(project)">
+                  👁️ Voir Détails
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedProject && !selectedTestGroup" class="project-details-view">
+            <button class="btn btn-back" (click)="backToProjects()">← Retour aux Projets</button>
+            <h2>Détails du Projet: {{ selectedProject.nomProduct }}</h2>
+            <p><strong>Description:</strong> {{ selectedProject.description }}</p>
+            <p><strong>Statut:</strong> <span [ngClass]="getStatusClass(selectedProject.calculatedStatus)"> {{ selectedProject.calculatedStatus }}</span></p>
+            <p><strong>Code d'accès:</strong> {{ selectedProject.accessCode }}</p>
+            <h3 class="mt-4">Groupes de Tests</h3>
+            <div *ngIf="selectedProject.testGroups && selectedProject.testGroups.length > 0" class="test-groups-grid">
+              <div *ngFor="let group of selectedProject.testGroups" class="test-group-card" (click)="viewTestGroupDetails(group)">
+                <h4>Groupe de Test #{{group.groupNumber}}</h4>
+                <p>ID: {{group.id}}</p>
+                <p>Nombres des Tests: {{group.tests ? group.tests.length : 0}}</p>
+                <div class="progress-bar">
+                    <div
+                        class="progress-fill"
+                        [style.width.%]="group.calculatedProgress"
+                        [ngClass]="getProgressBarGradientClass(group.calculatedProgress)">
+                    </div>
+                </div>
+                <p class="progress-text">{{group.calculatedProgress}}% Complété</p>
+                <button class="btn btn-primary btn-sm mt-2">Voir Tests</button>
+              </div>
+            </div>
+            <div *ngIf="!selectedProject.testGroups || selectedProject.testGroups.length === 0" class="no-data-message">
+              Aucun groupe de tests pour ce projet.
+            </div>
+          </div>
+
+          <div *ngIf="selectedProject && selectedTestGroup && !selectedTest" class="test-group-details-view">
+            <button class="btn btn-back" (click)="backToTestGroups()">← Retour aux Groupes</button>
+            <h2>Tests du Groupe #{{ selectedTestGroup.groupNumber }} (Projet: {{ selectedProject.nomProduct }})</h2>
+
+            <div *ngIf="selectedTestGroup.tests && selectedTestGroup.tests.length > 0" class="tests-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nom du Test</th>
+                    <th>Type</th>
+                    <th>Connecteurs</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let test of selectedTestGroup.tests">
+                    <td><strong>{{test.name}}</strong></td>
+                    <td>{{test.typeOfTest}}</td>
+                    <td>{{test.connectors}}</td>
+                    <td>
+                      <button class="btn btn-primary btn-sm" (click)="viewTestResultDetails(test)">
+                        📊 Voir Résultat
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div *ngIf="!selectedTestGroup.tests || selectedTestGroup.tests.length === 0" class="no-data-message">
+              Aucun test dans ce groupe.
+            </div>
+          </div>
+
+          <div *ngIf="selectedProject && selectedTestGroup && selectedTest" class="test-result-details-view">
+            <button class="btn btn-back" (click)="backToTestsList()">← Retour aux Tests</button>
+            <h2>Résultat du Test: {{ selectedTest.name }}</h2>
+            <p><strong>Nom:</strong> {{ selectedTest.name }}</p>
+            <p><strong>Type de Test:</strong> {{ selectedTest.typeOfTest }}</p>
+            <p><strong>Connecteurs:</strong> {{ selectedTest.connectors }}</p>
+            <p><strong>Standards/Commentaires:</strong> {{ selectedTest.standardsComments }}</p>
+            <p><strong>Test à Faire:</strong> {{ selectedTest.testToDo }}</p>
+            <div class="progress-bar">
+                <div
+                class="progress-fill"
+                [style.width.%]="selectedTest.score"
+                [ngClass]="getProgressBarGradientClass(selectedTest.score)">
+                </div>
+            </div>
+            <p class="progress-text">{{selectedTest.score}}% Complété</p>
+            <h3 class="mt-4">Résultat</h3>
+            <div *ngIf="selectedTest" class="test-result-display">
+                <p><strong>Statut:</strong> <span [ngClass]="getStatusClass(selectedTest.status)">{{ selectedTest.status }}</span></p>
+                <p><strong>Score:</strong> {{ selectedTest.score }}%</p>
+                <p><strong>Date du Test:</strong> {{ selectedTest.testToDo }}</p>
+                <p><strong>Commentaires du Technicien:</strong> {{ selectedTest.standardsComments || 'N/A' }}</p>
+            </div>
+            <div *ngIf="!selectedTest.connectors" class="no-data-message">
+                Aucun résultat enregistré pour ce test pour le moment.
+            </div>
+            </div>
+
+        </div>
+
+        <div *ngIf="currentSection === 'tests'" class="section-content">
+          <div class="section-actions">
+            <button class="btn btn-primary" (click)="runNewTest()">
+              <span>+</span> Nouveau Test
+            </button>
+          </div>
+
+          <div class="tests-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nom du Test</th>
+                  <th>Statut</th>
+                  <th>Score</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="currentSection === 'statistics'" class="section-content">
+  <div class="stats-grid">
+  <div *ngFor="let stat of sampleStats" class="stat-card">
+    <div class="stat-icon-wrapper"> <div class="stat-icon" [ngClass]="'trend-' + stat.trend">
+        <ng-container *ngIf="stat.trend === 'up'">
+          <i class="fas fa-arrow-up"></i>
+        </ng-container>
+        <ng-container *ngIf="stat.trend === 'down'">
+          <i class="fas fa-arrow-down"></i>
+        </ng-container>
+        <ng-container *ngIf="stat.trend === 'stable'">
+          <i class="fas fa-arrows-alt-h"></i>
+        </ng-container>
+      </div>
+    </div>
+    <div class="stat-info">
+      <h3>{{ stat.value }}{{ stat.unit }}</h3>
+      <p>{{ stat.label }}</p>
+    </div>
+  </div>
+</div>
+
+  <div class="charts-section">
+    <h3>Graphique des Performances par Projet</h3>
+    <div class="mock-chart">
+      <div *ngFor="let project of projectPerformanceData" class="chart-container">
+            <div class="chart-bar" [style.height.%]="95">
+            <span class="bar-score">{{project.performanceScore}}%</span>
+            </div>
+            <div class="chart-label">{{project.projectName}}</div>
+      </div>
+        <div *ngIf="!projectPerformanceData || projectPerformanceData.length === 0" class="no-data-message">
+            Aucune donnée de performance de projet disponible.
+        </div>
+    </div>
+  </div>
+</div>
+
+        <ng-container [ngSwitch]="currentSection">
+
+  <ng-container *ngSwitchCase="'chat'">
+    <div class="chat-section section-content">
+      <h2>Support Chat</h2>
+      <p class="section-description">Sélectionnez un projet pour discuter avec un technicien, ou contactez l'administrateur.</p>
+
+      <div class="chat-options mb-4 d-flex align-items-center">
+        <div class="form-group me-3 flex-grow-1">
+          <label for="chatProjectSelect">Discuter pour le Projet:</label>
+          <select id="chatProjectSelect" class="form-control"
+                  [(ngModel)]="selectedChatProjectId"
+                  (change)="onChatProjectSelectChange()">
+            <option [ngValue]="null" disabled>-- Choisir un projet --</option>
+            <option *ngFor="let project of clientProjects" [ngValue]="project.id">
+              {{ project.nomProduct }} (Code: {{ project.accessCode }})
+            </option>
+          </select>
+        </div>
+
+        <span class="me-3">ou </span>
+
+        <button class="btn btn-info" (click)="startAdminChat()">
+          <i class="fas fa-user-shield"></i> Discuter avec l'Admin
+        </button>
+      </div>
+
+      <div class="chat-container card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            Chat:
+            <ng-container *ngIf="selectedChatProjectId">
+              Projet: {{ selectedChatProjectName }} (Technicien)
+            </ng-container>
+            <ng-container *ngIf="isChattingWithAdmin">
+              Administrateur
+            </ng-container>
+            <ng-container *ngIf="!selectedChatProjectId && !isChattingWithAdmin">
+              Veuillez sélectionner une option
+            </ng-container>
+          </h5>
+        </div>
+
+        <div class="chat-messages card-body">
+          <div *ngIf="isLoadingChatMessages" class="loading-spinner text-center">
+            <i class="fas fa-spinner fa-spin"></i> Chargement des messages...
+          </div>
+          <div *ngIf="!selectedChatProjectId && !isChattingWithAdmin && !isLoadingChatMessages" class="no-chat-selected text-center text-muted">
+            Sélectionnez un projet ou choisissez de discuter avec l'administrateur pour commencer.
+          </div>
+          <div *ngIf="(selectedChatProjectId || isChattingWithAdmin) && chatMessages.length === 0 && !isLoadingChatMessages" class="no-messages text-center text-muted">
+            Aucun message dans cette conversation.
+          </div>
+
+          <div *ngFor="let message of chatMessages" class="message"
+               [ngClass]="{'current-user': message.senderId === currentUserId, 'other-user': message.senderId !== currentUserId}">
+            <div class="message-content">
+              <div class="message-header">
+                <strong>{{ message.senderId === currentUserId ? 'Moi' : message.senderUsername }}</strong>
+                <span class="timestamp">{{ message.timestamp | date:'shortTime' }}</span>
+              </div>
+              <p>{{ message.content }}</p>
+            </div>
+          </div>
+
+          </div>
+
+        <div class="chat-input card-footer" *ngIf="selectedChatProjectId || isChattingWithAdmin">
+          <input type="text" [(ngModel)]="newMessage" (keypress)="$event.key === 'Enter' && sendMessage()"
+                 placeholder="Tapez votre message..." class="form-control message-input"
+                 [disabled]="!selectedChatProjectId && !isChattingWithAdmin">
+          <button class="btn btn-primary ms-2" (click)="sendMessage()" [disabled]="!newMessage.trim() || (!selectedChatProjectId && !isChattingWithAdmin)">
+            <span>📤</span> Envoyer
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+</ng-container>
+        <ng-container *ngIf="currentSection === 'joinProject'">
+  <div class="join-project-section section-content">
+    <h2>Rejoindre un Projet</h2>
+    <p class="section-description">Entrez le code du projet ou scannez le QR code pour accéder à un projet existant.</p>
+
+    <div class="input-group">
+      <label for="projectCode" class="input-label">Code du Projet</label>
+      <input type="text" id="projectCode" [(ngModel)]="projectCode" placeholder="Ex: ABC-123-XYZ" class="form-input">
+      <button class="btn btn-primary" (click)="joinProject()">
+        <i class="fas fa-sign-in-alt"></i> Rejoindre
+      </button>
+    </div>
+
+    <div class="divider">
+      <span>OU</span>
+    </div>
+
+    <div class="qr-scan-area">
+      <p class="scan-text">Scannez le QR Code du projet</p>
+      <button class="btn btn-secondary btn-qr-scan" (click)="scanQRCode()">
+        <i class="fas fa-qrcode icon"></i> {{ showQrScanner ? 'Arrêter Scanner' : 'Scanner QR Code' }}
+      </button>
+      <p *ngIf="qrScanMessage" class="scan-message">{{ qrScanMessage }}</p>
+      <div *ngIf="showQrScanner" class="qr-scanner-placeholder">
+        <div id="qr-reader" style="width:100%;"></div>
+        <p *ngIf="qrScanMessage && !qrScanMessage.includes('Activating camera')">
+          Positionnez le QR code dans la zone de scan.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</ng-container>
+        <ng-container [ngSwitch]="currentSection">
+
+  <ng-container *ngSwitchCase="'reports'">
+    <div class="reports-section section-content">
+      <h2>Rapports des Projets</h2>
+      <p class="section-description">Sélectionnez un projet pour consulter ses rapports.</p>
+
+      <div class="section-actions mb-4"> <button class="btn btn-primary me-2" (click)="generateReport()">
+          <span>+</span> Générer Rapport
+        </button>
+        <button class="btn btn-secondary" (click)="exportReports()" [disabled]="isExporting">
+    <span>📤</span> Exporter <i *ngIf="isExporting" class="fas fa-spinner fa-spin ms-2"></i>
+  </button>
+      </div>
+
+      <div class="form-group">
+        <label for="projectSelect">Sélectionnez un Projet:</label>
+        <select id="projectSelect" class="form-control"
+                [(ngModel)]="selectedProjectId"
+                (change)="onProjectSelectChange()">
+          <option [ngValue]="null" disabled>-- Choisir un projet --</option>
+          <option *ngFor="let project of clientProjects" [ngValue]="project.id">
+            {{ project.nomProduct }} (Code: {{ project.accessCode }})
+          </option>
+        </select>
+      </div>
+
+      <div *ngIf="isLoadingReports" class="loading-spinner mt-4">
+        <i class="fas fa-spinner fa-spin"></i> Chargement des rapports...
+      </div>
+
+      <div *ngIf="!isLoadingReports && selectedProjectId && projectReports.length > 0" class="reports-table-container mt-4">
+        <h3>Rapports pour {{ selectedProjectName }}</h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Nom du Fichier</th>
+              <th>Type</th>
+              <th>Date d'Upload</th>
+              <th>Uploadé par</th> <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let report of projectReports">
+              <td>{{ report.fileName }}</td>
+              <td>{{ report.fileType }}</td>
+              <td>{{ report.uploadTime | date:'shortDate' }}</td> <td>{{ report.uploaderUsername }}</td> <td>
+                <button class="btn btn-info btn-sm me-2" (click)="viewReport(report)">
+                  <i class="fas fa-eye"></i> Voir
+                </button>
+                <button class="btn btn-success btn-sm" (click)="downloadReport(report)" [disabled]="isDownloadingFile">
+                  <i class="fas fa-download"></i> Télécharger
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!isLoadingReports && selectedProjectId && projectReports.length === 0" class="no-reports-message mt-4">
+        <p>Aucun rapport disponible pour ce projet.</p>
+      </div>
+
+      <div *ngIf="!selectedProjectId && !isLoadingReports" class="no-project-selected-message mt-4">
+        <p>Veuillez sélectionner un projet pour voir les rapports.</p>
+      </div>
+
+    </div>
+  </ng-container>
+
+</ng-container>
+      </div>
+    </main>
+  </div>
+</div>

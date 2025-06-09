@@ -1,0 +1,149 @@
+<!-- Bouton de retour (optionnel, si tu veux un bouton global aussi) -->
+<button *ngIf="isChatPanelVisible" (click)="closeChat()">⬅️ Retour aux projets</button>
+
+<!-- Liste des projets -->
+<div *ngIf="!isChatPanelVisible">
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="🔍 Rechercher un produit..."
+      [(ngModel)]="searchTerm"
+      (input)="filterProjects()"
+    />
+  </div>
+
+  <table class="project-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nom du Produit</th>
+        <th>Description</th>
+        <th>Client</th>
+        <th>Technicien</th>
+        <th>Statut</th>
+        <th>Code d'accès</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let project of paginatedProjects; let i = index">
+        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+        <td>{{ project.nomProduct }}</td>
+        <td>{{ project.description }}</td>
+        <td [ngClass]="{ 'empty-field': !project.client?.username }">
+          {{ project.client?.username || '-' }}
+        </td>
+        <td>{{ project.technician?.username }}</td>
+        <td [ngClass]="getStatusClass(project.calculatedStatus)">
+            {{ project.calculatedStatus || '-' }}
+      </td>
+        <td>{{ project.accessCode }}</td>
+        <td>
+          <button (click)="editProject(project)">✏️</button>
+          <button (click)="deleteProject(project)">🗑️</button>
+          <button (click)="openChat(project.client?.id, project.id)">💬</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Précédent</button>
+    <button
+      *ngFor="let page of [].constructor(totalPages); let i = index"
+      (click)="goToPage(i + 1)"
+      [class.active]="currentPage === i + 1"
+    >
+      {{ i + 1 }}
+    </button>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Suivant</button>
+  </div>
+</div>
+
+<!-- Messagerie -->
+<div *ngIf="isChatPanelVisible" class="chat-panel">
+  <div class="chat-header">
+    <div class="header-info">
+      <img [src]="chatClientAvatarUrl || 'assets/default-avatar.png'" alt="Avatar" class="chat-header-avatar">
+      <h3>Messagerie avec {{ chatClientName || '...' }}</h3>
+    </div>
+    <div class="chat-actions">
+      <button (click)="startAudioCall()" title="Appel Audio" class="action-btn audio-call-btn">🎙️</button>
+      <button (click)="startVideoCall()" title="Appel Vidéo" class="action-btn video-call-btn">📹</button>
+      <button (click)="closeChat()" title="Fermer le chat" class="action-btn close-chat-btn">❌</button>
+    </div>
+  </div>
+
+  <div class="chat-messages" #chatMessagesContainer> <div *ngFor="let msg of chatMessages; let i = index"
+         [ngClass]="{'my-message': msg.senderName === currentUserName, 'other-message': msg.senderName !== currentUserName}"
+         class="message-bubble-wrapper"
+         [@messageAnimation]="'in'"> <div class="message-content-wrapper">
+        <div *ngIf="msg.senderName !== currentUserName" class="message-avatar">
+          <img [src]="chatClientAvatarUrl || 'assets/default-avatar.png'" alt="Avatar">
+        </div>
+        <div class="message-bubble">
+          <div class="message-text">{{ msg.text }}</div>
+          <div class="message-timestamp">{{ msg.timestamp | date:'short' }}</div>
+        </div>
+        <div *ngIf="msg.senderName === currentUserName" class="message-avatar">
+          <img [src]="currentUserAvatarUrl || 'assets/default-avatar.png'" alt="Avatar">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form (ngSubmit)="sendMessage()" class="chat-input-form">
+    <div class="input-group">
+      <input type="text" [(ngModel)]="newMessage" name="message" placeholder="Écrire un message..." required />
+      <input type="file" (change)="onFileSelected($event)" hidden #fileInput />
+      <button type="button" (click)="fileInput.click()" title="Joindre un fichier" class="input-action-btn attach-file-btn">📎</button>
+      <button type="submit" title="Envoyer le message" class="input-action-btn send-message-btn">📤</button>
+    </div>
+  </form>
+</div>
+
+
+
+
+
+
+<!-- Modal d'édition -->
+<div class="modal" [class.show]="isEditModalOpen">
+  <div class="modal-content">
+    <h3>Modifier le Projet</h3>
+
+    <form (ngSubmit)="updateProject()">
+      <div class="form-group">
+        <label>Nom du Produit</label>
+        <input type="text" [(ngModel)]="selectedProject.nomProduct" name="nomProduct" required />
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" [(ngModel)]="selectedProject.description" name="description" />
+      </div>
+
+      <div class="form-group">
+        <label>Technicien</label>
+       <select [(ngModel)]="selectedProject.technicianId" name="technicianId">
+          <option *ngFor="let tech of techniciens" [value]="tech.id">{{ tech.username }}</option>
+        </select>
+        <label>Status</label>
+        <select [(ngModel)]="selectedProject.calculatedStatus" name="status">
+            <option *ngFor="let status of testStatusOptions" [value]="status.value">
+                {{ status.label }}
+            </option>
+        </select>
+
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit">✅ Enregistrer</button>
+        <button type="button" class="cancel-btn" (click)="closeModal()">❌ Annuler</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+

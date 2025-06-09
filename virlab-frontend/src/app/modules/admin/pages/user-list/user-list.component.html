@@ -1,0 +1,112 @@
+<div *ngIf="successMessage" class="success-message">
+  {{ successMessage }}
+</div>
+
+<div class="search-bar">
+  <input
+    type="text"
+    placeholder="🔍 Rechercher par nom ou email..."
+    [(ngModel)]="searchTerm"
+    (input)="onSearchChange()" />
+</div>
+
+<!-- Sélecteur de rôle -->
+<div class="role-selector">
+  <button [class.active]="selectedRole === 'ADMIN'" (click)="selectRole('ADMIN')">👩‍💼 Admin</button>
+  <button [class.active]="selectedRole === 'CLIENT'" (click)="selectRole('CLIENT')">🧑 Clients</button>
+  <button [class.active]="selectedRole === 'TECHNICIEN'" (click)="selectRole('TECHNICIEN')">🔧 Techniciens</button>
+</div>
+<div *ngIf="selectedUser" class="edit-form card">
+  <h3 class="form-title">📝 Modifier l'utilisateur</h3>
+
+  <form #editForm="ngForm" (ngSubmit)="onUpdateUser()" class="form-content">
+    <input type="hidden" [(ngModel)]="selectedUser.id" name="id" />
+
+    <div class="form-group">
+      <label for="username">👤 Nom :</label>
+      <input
+        id="username"
+        type="text"
+        [(ngModel)]="selectedUser.username"
+        name="username"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">📧 Email :</label>
+      <input
+        id="email"
+        type="email"
+        [(ngModel)]="selectedUser.email"
+        name="email"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">🔒 Mot de passe :</label>
+      <input
+        id="password"
+        type="password"
+        [(ngModel)]="selectedUser.password"
+        name="password"
+        placeholder="Laisser vide si inchangé"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="editForm.invalid" class="btn save">
+        💾 Mettre à jour
+      </button>
+      <button type="button" (click)="cancelEdit()" class="btn cancel">
+        ❌ Annuler
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Liste des utilisateurs selon le rôle -->
+<div class="user-section" *ngIf="usersByRole.length > 0">
+  <h2 class="section-title"
+    [ngClass]="{
+      'admin': selectedRole === 'ADMIN',
+      'client': selectedRole === 'CLIENT',
+      'tech': selectedRole === 'TECHNICIEN'
+    }">
+  {{ selectedRole | titlecase }}s
+</h2>
+
+  <table class="user-table">
+    <thead>
+      <tr><th>#</th><!-- <th>Id</th> --><th>Nom</th><th>Email</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of paginatedUsers(usersByRole); let i = index">
+        <td>{{ i + 1 + pageIndex * itemsPerPage }}</td>
+        <!-- <td>{{user.id}}</td> --> 
+        <td class="nom-utilisateur">{{ user.username }}</td>
+        <td class="email-utilisateur">{{ user.email }}</td>
+        <td>
+          <button (click)="editUser(user)">✏️</button>
+          <button (click)="deleteUser(user)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<div *ngIf="usersByRole.length === 0 && !isLoading">
+  <p>Aucun utilisateur trouvé pour ce rôle.</p>
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+  <button (click)="previousPage()" [disabled]="pageIndex === 0">⬅️ Précédent</button>
+  <span>Page {{ pageIndex + 1 }}</span>
+  <button (click)="nextPage()" [disabled]="!hasNextPage()">Suivant ➡️</button>
+</div>
+
+

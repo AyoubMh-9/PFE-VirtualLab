@@ -1,0 +1,2608 @@
+/* --- Global Variables (Ensure these are in your main styles.css or :root) --- */
+
+
+
+/* --- Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; /* More comprehensive font stack */
+    background: var(--light-bg);
+    color: var(--text-primary);
+    overflow-x: hidden; /* Prevent horizontal scroll from animations */
+    line-height: 1.6; /* Better readability */
+}
+
+.dashboard-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Top Navigation with Glassmorphism --- */
+.top-nav {
+    height: 70px;
+    background: rgba(255, 255, 255, 0.85); /* Slightly less opaque for more glass effect */
+    backdrop-filter: blur(25px); /* Increased blur */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px; /* More padding */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--glass-border); /* Use new glass border variable */
+    box-shadow: var(--shadow); /* Consistent shadow */
+}
+
+.nav-brand h2 {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800; /* Bolder for brand */
+    font-size: 1.8rem; /* Slightly larger */
+    animation: slideInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* Smoother animation curve */
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px; /* Slightly more padding */
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.15); /* More visible background */
+    transition: all 0.3s ease-in-out; /* Smoother transition */
+    cursor: pointer;
+    animation: slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.3); /* More pronounced hover */
+    transform: translateY(-3px) scale(1.02); /* More noticeable lift and slight scale */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-img {
+    width: 45px; /* Slightly larger image */
+    height: 45px;
+    border-radius: 50%;
+    border: 3px solid var(--primary-color); /* Thicker border with primary color */
+    object-fit: cover; /* Ensure image covers the area */
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-img:hover {
+    transform: scale(1.15) rotate(5deg); /* More playful hover */
+}
+
+/* --- Main Layout --- */
+.main-layout {
+    display: flex;
+    flex: 1;
+    gap: 30px; /* Increased gap */
+    padding: 30px; /* More padding */
+}
+
+/* --- Sidebar with Modern Design --- */
+.sidebar {
+    width: 280px;
+    background: rgba(255, 255, 255, 0.85); /* Consistent glassmorphism */
+    backdrop-filter: blur(25px);
+    border-radius: 25px; /* More rounded */
+    padding: 25px 0; /* More padding */
+    height: fit-content;
+    position: sticky;
+    top: 100px; /* Adjusted sticky position */
+    box-shadow: var(--shadow);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
+    border: 1px solid var(--glass-border);
+    animation: slideInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
+}
+
+.sidebar.collapsed {
+    width: 90px; /* Slightly wider collapsed state for better icon visibility */
+}
+
+.sidebar-header {
+    padding: 0 25px 25px; /* Consistent padding */
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 25px;
+    display: flex; /* Ensure proper alignment if content is added */
+    justify-content: flex-end; /* Align toggle button to the right */
+}
+
+.toggle-btn {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    padding: 14px; /* Larger hit area */
+    border-radius: 15px; /* More rounded button */
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4); /* Stronger shadow */
+    display: flex; /* For icon centering */
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-btn:hover {
+    transform: translateY(-4px) scale(1.05); /* More pronounced hover */
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 0 15px; /* Consistent padding */
+}
+
+.nav-item {
+    margin-bottom: 10px; /* More space between items */
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 15px; /* More rounded */
+    overflow: hidden;
+    position: relative;
+    /* Removed individual background for better gradient effect on active/hover */
+}
+
+.nav-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-gradient);
+    transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation */
+    z-index: -1;
+    border-radius: 15px; /* Ensure border radius applies to pseudo-element */
+}
+
+.nav-item.active::before,
+.nav-item:hover::before {
+    left: 0;
+}
+
+.nav-item.active,
+.nav-item:hover {
+    color: var(--white); /* Text color becomes white when active/hovered */
+    transform: translateX(8px); /* More pronounced slide */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow on active/hover */
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px; /* More padding */
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    text-decoration: none; /* Remove underline for links */
+    color: var(--text-primary); /* Default link color */
+}
+
+.nav-item.active .nav-link,
+.nav-item:hover .nav-link {
+    color: var(--white); /* Ensure link text is white on active/hover */
+}
+
+.icon {
+    font-size: 1.4rem; /* Slightly larger icons */
+    min-width: 28px; /* Ensure consistent icon width */
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.nav-item:hover .icon {
+    transform: scale(1.2); /* More noticeable icon scale */
+}
+
+.nav-text {
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out, margin-left 0.3s ease-in-out; /* Added margin transition */
+}
+
+.sidebar.collapsed .nav-text {
+    opacity: 0;
+    width: 0; /* Collapse width to hide content */
+    overflow: hidden; /* Hide overflow content */
+    margin-left: -20px; /* Pull back to hide smoothly */
+}
+
+/* --- Main Content --- */
+.main-content {
+    flex: 1;
+    animation: slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards;
+}
+
+.content-header {
+    margin-bottom: 35px; /* More space */
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s forwards;
+}
+
+.content-header h1 {
+    font-size: 2.8rem; /* Larger heading */
+    font-weight: 800; /* Bolder heading */
+    margin-bottom: 10px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.breadcrumb {
+    color: var(--text-secondary);
+    font-size: 1.05rem; /* Slightly larger breadcrumbs */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* More space between items */
+}
+
+.breadcrumb span {
+    display: flex; /* For icon alignment if used */
+    align-items: center;
+}
+
+.breadcrumb span:not(:last-child)::after {
+    content: '/'; /* Use a more common separator */
+    margin-left: 10px;
+    color: var(--border-color); /* Lighter separator */
+}
+
+.breadcrumb a {
+    color: var(--primary-color); /* Link color */
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+.breadcrumb a:hover {
+    color: var(--secondary-color); /* Change color on hover */
+    text-decoration: underline;
+}
+
+/* --- Enhanced Buttons --- */
+.btn {
+    padding: 14px 28px; /* More generous padding */
+    border: none;
+    border-radius: 15px; /* More rounded */
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem; /* Slightly larger font */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center; /* Center content within button */
+    gap: 10px; /* More space for icon */
+    transform: translateZ(0); /* Force hardware acceleration */
+    -webkit-backface-visibility: hidden; /* Fix for flickering on hover */
+    backface-visibility: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.25); /* Stronger ripple color */
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease-out, height 0.6s ease-out; /* Smoother ripple */
+    z-index: 0; /* Behind content */
+}
+
+.btn:hover::before {
+    width: 350px; /* Larger ripple effect */
+    height: 350px;
+}
+
+.btn span { /* Ensure text is above pseudo-element */
+    position: relative;
+    z-index: 1;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); /* Stronger shadow */
+}
+
+.btn-primary:hover {
+    transform: translateY(-4px); /* More pronounced lift */
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5); /* Stronger hover shadow */
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.7); /* Slightly less opaque */
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(15px); /* More blur for secondary button */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Default subtle shadow */
+}
+
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.9); /* More solid on hover */
+    box-shadow: var(--shadow); /* Consistent hover shadow */
+}
+
+/* --- Section Actions --- */
+.section-actions {
+    margin-bottom: 35px;
+    display: flex;
+    gap: 20px; /* Increased gap */
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s forwards;
+}
+
+/* --- Enhanced Project Cards (Projects Dashboard View) --- */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px; /* More space */
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1s forwards;
+}
+
+.project-card {
+    background: rgba(255, 255, 255, 0.85); /* Consistent glassmorphism */
+    backdrop-filter: blur(25px);
+    border-radius: 25px; /* More rounded */
+    padding: 30px; /* More padding */
+    box-shadow: var(--shadow);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--glass-border);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer; /* Indicate clickable */
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px; /* Thicker top line */
+    background: var(--primary-gradient);
+    transform: scaleX(0);
+    transform-origin: left; /* Animation starts from left */
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.project-card:hover {
+    transform: translateY(-10px); /* More pronounced lift */
+    box-shadow: var(--shadow-hover);
+}
+
+.project-card:hover::before {
+    transform: scaleX(1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.card-header h3 {
+    font-size: 1.5rem; /* Larger title */
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.status {
+    padding: 8px 18px; /* More padding */
+    border-radius: 25px; /* More rounded */
+    font-size: 0.9rem; /* Slightly larger font */
+    font-weight: 700; /* Bolder status */
+    text-transform: uppercase;
+    letter-spacing: 0.8px; /* More spacing */
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.status-actif {
+    background: linear-gradient(135deg, #e0ffe0, #c8f5e0); /* Softer green */
+    color: #27ae60;
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.15); /* Subtle shadow */
+}
+.status-en-cours {
+    background: linear-gradient(135deg, #fff7e6, #ffe9c8); /* Softer yellow */
+    color: #f39c12;
+    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.15);
+}
+.status-terminé {
+    background: linear-gradient(135deg, #e6f7ff, #c8e9ff); /* Softer blue */
+    color: #3498db;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
+}
+
+
+/* --- Enhanced Progress Bar --- */
+/* Your existing progress bar container */
+.progress-bar {
+  width: 100%;
+  height: 10px; /* Thicker bar */
+  background: var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px; /* More space below */
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Inner shadow */
+}
+
+/* Base progress fill styles (remove static background) */
+.progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); /* Slower, smoother animation */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dynamic background gradients for progress fill */
+.progress-fill.low-progress {
+  background: var(--low-progress-gradient);
+}
+
+.progress-fill.medium-progress {
+  background: var(--medium-progress-gradient);
+}
+
+.progress-fill.high-progress {
+  background: var(--high-progress-gradient);
+}
+
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.4) 30%, rgba(255,255,255,0.4) 70%, transparent 70%); /* Stronger shine */
+  background-size: 40px 40px; /* Larger shine stripes */
+  animation: progressShine 2s linear infinite;
+}
+
+/* Keyframes for the shine animation */
+@keyframes progressShine {
+  0% {
+    background-position: -80px 0; /* Adjust this value if needed */
+  }
+  100% {
+    background-position: 80px 0; /* Adjust this value if needed */
+  }
+}
+
+/* --- Enhanced Statistics (Dashboard View) --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted min-width */
+    gap: 30px;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1s forwards;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    padding: 30px; /* More padding */
+    border-radius: 25px; /* More rounded */
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--glass-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px); /* More pronounced lift */
+    box-shadow: var(--shadow-hover);
+}
+
+.stat-icon {
+    font-size: 2.8rem; /* Larger icon */
+    width: 75px; /* Larger icon container */
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px; /* More rounded icon container */
+    color: var(--white); /* Icon color */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15); /* Shadow for icon */
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.trend-up { background: var(--success-gradient); }
+.trend-down { background: var(--danger-gradient); }
+.trend-stable { background: var(--primary-gradient); }
+
+.stat-info h3 {
+    font-size: 2.5rem; /* Larger number */
+    font-weight: 800; /* Bolder number */
+    margin-bottom: 5px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-info p {
+    font-size: 1.1rem; /* Clearer label */
+    color: var(--text-secondary);
+}
+
+/* --- Enhanced Charts (Dashboard View) --- */
+.charts-section {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    padding: 35px; /* More padding */
+    border-radius: 25px; /* More rounded */
+    box-shadow: var(--shadow);
+    border: 1px solid var(--glass-border);
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s forwards;
+}
+
+.charts-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 25px;
+}
+
+.mock-chart {
+    display: flex;
+    align-items: flex-end; /* Align bars to bottom */
+    gap: 20px; /* More space between bars */
+    height: 280px; /* Taller chart */
+    margin-top: 25px;
+    padding: 20px;
+    background: rgba(248, 250, 252, 0.5); /* Lighter background for chart area */
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.chart-bar {
+    flex: 1;
+    background: var(--primary-gradient);
+    border-radius: 10px 10px 0 0; /* More rounded tops */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.chart-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 30%, rgba(255,255,255,0.3) 70%, transparent 70%);
+    background-size: 25px 25px; /* Larger shine stripes */
+    animation: chartShine 3s linear infinite;
+}
+
+.chart-bar:hover {
+    transform: scaleY(1.08) scaleX(1.02); /* More pronounced scale */
+    filter: brightness(1.2); /* Brighter on hover */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+@keyframes chartShine {
+    0% { transform: translateX(-100%) translateY(-100%); }
+    100% { transform: translateX(100%) translateY(100%); }
+}
+
+/* --- Enhanced Tables (General and Test List) --- */
+.tests-table, .reports-list { /* Combined for consistent table-like sections */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--glass-border);
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1s forwards;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 20px 25px; /* More padding */
+    text-align: left;
+    border-bottom: 1px solid var(--border-color); /* Consistent border color */
+}
+
+th {
+    background: rgba(248, 250, 252, 0.7); /* Slightly more transparent header */
+    font-weight: 700; /* Bolder header */
+    color: var(--text-primary);
+    font-size: 1rem; /* Slightly larger header font */
+    text-transform: uppercase;
+    letter-spacing: 0.8px; /* More spacing */
+}
+
+tbody tr {
+    transition: all 0.3s ease-in-out;
+}
+
+tbody tr:hover {
+    background: rgba(102, 126, 234, 0.08); /* More noticeable hover background */
+    transform: translateY(-2px); /* Subtle lift */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Subtle shadow on hover */
+}
+
+/* --- Enhanced Chat --- */
+.chat-container {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    border-radius: 25px;
+    box-shadow: var(--shadow);
+    height: 650px; /* Slightly taller chat */
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--glass-border);
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1s forwards;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 30px; /* More padding */
+    overflow-y: auto;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* More space between messages */
+}
+
+/* Scrollbar styling for chat-messages */
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+.chat-messages::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);
+    border-radius: 10px;
+}
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.5); /* Semi-transparent primary color */
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+
+.message {
+    max-width: 75%; /* Slightly narrower for better flow */
+    animation: fadeInUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative; /* For speech bubble tails */
+}
+
+.message-content {
+    padding: 16px 22px; /* More padding */
+    border-radius: 28px; /* More rounded, pill-like */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
+    position: relative;
+    word-wrap: break-word; /* Ensure long words break */
+}
+
+.message.technician {
+    align-self: flex-start;
+}
+
+.message.user {
+    align-self: flex-end;
+}
+
+/* Speech bubble tails - More refined */
+.message.technician .message-content::before {
+    content: '';
+    position: absolute;
+    bottom: 5px; /* Position at the bottom */
+    left: -8px; /* Offset to create the tail */
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-right: 10px solid var(--primary-color); /* Matches background color */
+    border-bottom: 10px solid transparent;
+    transform: skewY(15deg); /* Slight skew for a more natural tail */
+    z-index: 1;
+}
+
+.message.user .message-content::before {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    right: -8px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-left: 10px solid rgba(248, 250, 252, 0.9); /* Matches background color */
+    border-bottom: 10px solid transparent;
+    transform: skewY(-15deg);
+    z-index: 1;
+}
+
+.message.technician .message-content {
+    background: var(--primary-gradient);
+    color: var(--white);
+    /* Remove specific corner radius if you want consistent rounding with tails */
+    border-bottom-left-radius: 8px; /* Slightly less rounded for tail attachment */
+}
+
+.message.user .message-content {
+    background: rgba(248, 250, 252, 0.9);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    /* Remove specific corner radius if you want consistent rounding with tails */
+    border-bottom-right-radius: 8px; /* Slightly less rounded for tail attachment */
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px; /* Slightly less space */
+    font-size: 0.8rem; /* Smaller header font */
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.message.technician .message-header {
+    color: rgba(255, 255, 255, 0.9); /* Brighter for technician messages */
+}
+
+.timestamp {
+    font-weight: 400;
+    opacity: 0.9; /* Slightly less opaque */
+}
+
+.message-content p {
+    font-size: 0.95rem; /* Consistent message text size */
+    line-height: 1.5;
+}
+
+.chat-input {
+    padding: 20px 30px; /* More padding */
+    display: flex;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.6);
+    border-top: 1px solid var(--border-color);
+    border-bottom-left-radius: 25px; /* Match container border-radius */
+    border-bottom-right-radius: 25px; /* Match container border-radius */
+}
+
+.message-input {
+    flex: 1;
+    padding: 16px 22px; /* Consistent padding with message content */
+    border: 1px solid var(--border-color);
+    border-radius: 28px; /* More rounded */
+    font-size: 1rem;
+    background: var(--white);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.08); /* Deeper inner shadow */
+}
+
+.message-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.2); /* More prominent focus shadow */
+}
+
+.chat-input .btn-primary {
+    padding: 16px 35px; /* Larger padding for send button */
+    border-radius: 28px; /* Match input field radius */
+    font-size: 1rem;
+    background: var(--primary-gradient);
+    color: var(--white);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+.chat-input .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+/* --- Project Details View (Image 1) --- */
+.project-details-view {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    border-radius: 25px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--glass-border);
+    padding: 35px;
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s forwards;
+}
+
+.project-details-view .btn-back {
+    background: var(--btn-secondary-bg); /* Use a more semantic variable if available, or rgba directly */
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px; /* Slightly smaller for back button */
+    border-radius: 12px;
+    cursor: pointer;
+    margin-bottom: 25px; /* More space */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.project-details-view .btn-back:hover {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.project-details-view h2 {
+    font-size: 2.2rem; /* Larger project title */
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.project-details-view p {
+    margin-bottom: 10px; /* More space */
+    color: var(--text-primary); /* Use primary text color */
+    font-size: 1.05rem; /* Slightly larger text */
+    line-height: 1.6;
+}
+
+.project-details-view strong {
+    font-weight: 600; /* Slightly less bold than headings */
+    color: var(--text-primary);
+}
+
+.project-details-view h3 {
+    font-size: 1.8rem; /* Larger sub-heading */
+    font-weight: 600;
+    margin-top: 35px; /* More space above */
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    background: linear-gradient(90deg, var(--text-primary), var(--text-secondary)); /* Subtle gradient for sub-headings */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.test-groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted min-width */
+    gap: 25px; /* More space */
+    margin-top: 15px;
+}
+
+.test-group-card {
+    background: rgba(255, 255, 255, 0.7); /* Lighter glass effect */
+    border: 1px solid var(--glass-border);
+    border-radius: 18px; /* More rounded */
+    padding: 25px; /* More padding */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); /* Stronger shadow */
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.test-group-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px; /* Thin line */
+    background: var(--primary-gradient);
+    transform: scaleX(0);
+    transform-origin: right; /* Animates from right */
+    transition: transform 0.3s ease;
+}
+
+.test-group-card:hover {
+    transform: translateY(-8px); /* More lift */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); /* Stronger hover shadow */
+    border-color: rgba(102, 126, 234, 0.5); /* Primary color border on hover */
+}
+
+.test-group-card:hover::before {
+    transform: scaleX(1);
+}
+
+.test-group-card h4 {
+    font-size: 1.3rem; /* Larger title */
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 10px; /* More space */
+    color: var(--text-primary);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.test-group-card p {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.95rem; /* Consistent text size */
+    line-height: 1.5;
+}
+
+.test-group-card .btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 10px 18px; /* Adjust padding */
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem; /* Smaller font for card button */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 15px; /* Space above button */
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+}
+
+.test-group-card .btn-primary:hover {
+    background-color: var(--primary-color); /* Fallback for gradient */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* --- Test List View (Image 2) --- */
+.test-group-details-view {
+    /* Reuse common section-content styles */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    border-radius: 25px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--glass-border);
+    padding: 35px;
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s forwards;
+}
+
+.test-group-details-view .btn-back {
+    background: var(--btn-secondary-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-bottom: 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.test-group-details-view .btn-back:hover {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.test-group-details-view h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 25px; /* More space */
+    color: var(--text-primary);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tests-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* More space above table */
+    box-shadow: var(--shadow); /* Consistent shadow */
+    border-radius: 18px; /* More rounded table container */
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+}
+
+.tests-table th, .tests-table td {
+    padding: 18px 25px; /* Consistent padding */
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tests-table th {
+    background-color: rgba(248, 250, 252, 0.7);
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.tests-table tbody tr:nth-child(even) {
+    background-color: rgba(249, 249, 249, 0.5); /* Lighter transparent stripe */
+}
+
+.tests-table tbody tr:hover {
+    background-color: rgba(102, 126, 234, 0.08); /* Highlight on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.tests-table td strong {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.tests-table .btn-primary {
+    background: var(--primary-gradient); /* Consistent primary button */
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+}
+
+.tests-table .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* --- Test Result View (Image 3) --- */
+.test-result-details-view {
+    /* Reuse common section-content styles */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    border-radius: 25px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--glass-border);
+    padding: 35px;
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s forwards;
+}
+
+.test-result-details-view .btn-back {
+    background: var(--btn-secondary-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-bottom: 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.test-result-details-view .btn-back:hover {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.test-result-details-view h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.test-result-details-view p {
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.test-result-details-view strong {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.test-result-details-view h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-top: 35px;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    background: linear-gradient(90deg, var(--text-primary), var(--text-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.test-result-display {
+    background: rgba(248, 250, 252, 0.6); /* Lighter, more transparent background */
+    border: 1px solid var(--border-color);
+    border-radius: 15px; /* More rounded */
+    padding: 25px; /* More padding */
+    margin-top: 15px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); /* Inner shadow for depth */
+}
+
+.test-result-display pre { /* For code/json results */
+    white-space: pre-wrap; /* Preserve formatting but wrap long lines */
+    word-wrap: break-word;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; /* Monospace font */
+    font-size: 0.9rem;
+    color: #34495e; /* Darker text for code */
+    background-color: rgba(236, 240, 241, 0.7); /* Light background for code block */
+    padding: 15px;
+    border-radius: 10px;
+    overflow-x: auto; /* Enable horizontal scrolling for long lines */
+}
+
+.test-result-display p {
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.test-result-details-view .no-data-message {
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 15px;
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    border: 1px dashed var(--border-color);
+}
+
+/* --- Join Project Section Styling --- */
+.join-project-section {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    border-radius: 25px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--glass-border);
+    padding: 40px; /* More generous padding */
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* More space between elements */
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1s forwards;
+}
+
+.join-project-section h2 {
+    font-size: 2.5rem; /* Larger heading */
+    font-weight: 800;
+    color: var(--text-primary);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 15px;
+}
+
+.section-description {
+    color: var(--text-secondary);
+    font-size: 1.1rem; /* Clearer description */
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Slightly more space */
+    margin-bottom: 25px;
+}
+
+.input-label {
+    font-size: 1.15rem; /* Larger label */
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 16px 22px; /* More padding */
+    border: 1px solid var(--border-color);
+    border-radius: 15px; /* More rounded */
+    font-size: 1.05rem; /* Slightly larger font */
+    color: var(--text-primary);
+    background: var(--white);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.2);
+}
+
+.input-group .btn-primary {
+    align-self: flex-start;
+    margin-top: 20px; /* More space */
+    padding: 16px 35px; /* Generous padding */
+    border-radius: 18px; /* Match input curvature */
+    font-size: 1.1rem; /* Larger button text */
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 30px 0; /* More vertical space */
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+    margin: 0 15px; /* More space around text */
+}
+
+.qr-scan-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center content vertically */
+    gap: 25px; /* More space */
+    padding: 30px; /* More padding */
+    border: 2px dashed var(--border-color);
+    border-radius: 20px;
+    background: rgba(248, 250, 252, 0.7); /* Slightly stronger background */
+    transition: all 0.3s ease;
+    min-height: 200px; /* Minimum height for better visual */
+}
+
+.qr-scan-area:hover {
+    border-color: var(--primary-color); /* Highlight on hover */
+    box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.2); /* More prominent focus shadow */
+    background: rgba(248, 250, 252, 0.8); /* Slightly more opaque on hover */
+}
+
+.qr-icon {
+    font-size: 3.5rem; /* Large icon */
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.qr-text {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* --- Animations --- */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-80px); /* More dramatic slide */
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(80px); /* More dramatic slide */
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px); /* More dramatic fade up */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; } /* More prominent pulse with opacity change */
+}
+
+/* --- Loading Animation --- */
+.loading {
+    display: inline-block;
+    width: 24px; /* Slightly larger */
+    height: 24px;
+    border: 4px solid rgba(255,255,255,.4); /* Thicker border */
+    border-radius: 50%;
+    border-top-color: var(--white);
+    animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; /* Faster, bouncier spin */
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- Notification Badge --- */
+.notification-badge {
+    position: absolute;
+    top: -8px; /* Adjusted position */
+    right: -8px;
+    background: var(--danger-gradient);
+    color: var(--white);
+    border-radius: 50%;
+    width: 24px; /* Slightly larger */
+    height: 24px;
+    font-size: 0.8rem; /* Clearer font size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 10px rgba(231, 76, 60, 0.4); /* Shadow for badge */
+}
+
+
+/* ========================================= */
+/* Responsive Design */
+/* ========================================= */
+@media (max-width: 1200px) { /* Adjust for larger tablets/smaller laptops */
+    .main-layout {
+        gap: 25px;
+        padding: 25px;
+    }
+    .sidebar {
+        width: 250px;
+    }
+    .sidebar.collapsed {
+        width: 80px;
+    }
+    .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 25px;
+    }
+    .stat-info h3 {
+        font-size: 2.2rem;
+    }
+    .test-groups-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+}
+
+
+@media (max-width: 1024px) {
+    .main-layout {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .sidebar {
+        width: 100%;
+        position: static;
+        order: 2; /* Puts sidebar below main content on smaller screens */
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+    }
+
+    .sidebar.collapsed {
+        width: 100%; /* Ensure it still takes full width when collapsed */
+        .nav-menu {
+             display: flex;
+             flex-wrap: wrap;
+             justify-content: center; /* Center icons when collapsed horizontally */
+             padding: 0;
+        }
+        .nav-item {
+            flex-grow: 1; /* Allow items to grow */
+            max-width: 80px; /* Max width for icons */
+            text-align: center;
+            margin-bottom: 0; /* Remove vertical margin */
+        }
+        .nav-link {
+            flex-direction: column; /* Stack icon and text */
+            padding: 10px 5px; /* Adjust padding for smaller items */
+            gap: 5px;
+        }
+        .nav-text {
+            opacity: 1; /* Show text when collapsed on mobile */
+            width: auto;
+            margin-left: 0;
+            font-size: 0.75rem; /* Smaller text for icons */
+        }
+        .nav-item.active,
+        .nav-item:hover {
+            transform: none; /* Remove horizontal translation */
+        }
+    }
+
+    .sidebar-header {
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .top-nav {
+        padding: 0 25px;
+    }
+
+    .nav-brand h2 {
+        font-size: 1.5rem;
+    }
+
+    .user-profile {
+        padding: 6px 12px;
+    }
+
+    .profile-img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .content-header h1 {
+        font-size: 2rem;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .stat-card {
+        flex-direction: column; /* Stack icon and info */
+        text-align: center;
+        padding: 25px;
+    }
+    .stat-icon {
+        margin-bottom: 10px;
+    }
+
+    .charts-section, .join-project-section, .project-details-view, .test-group-details-view {
+        padding: 30px;
+    }
+    .chat-container {
+        height: 500px; /* Adjust height */
+    }
+}
+
+@media (max-width: 768px) {
+    .top-nav {
+        padding: 0 15px;
+        height: 60px;
+    }
+    .nav-brand h2 {
+        font-size: 1.3rem;
+    }
+    .user-profile {
+        padding: 4px 10px;
+        gap: 8px;
+    }
+    .profile-img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .main-layout {
+        padding: 15px;
+    }
+
+    .content-header h1 {
+        font-size: 1.8rem;
+    }
+    .breadcrumb {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+
+    .section-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr; /* Single column */
+        gap: 15px;
+    }
+
+    .project-card {
+        padding: 20px;
+        border-radius: 15px;
+    }
+    .card-header h3 {
+        font-size: 1.2rem;
+    }
+    .status {
+        font-size: 0.8rem;
+        padding: 6px 14px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .stat-card {
+        padding: 20px;
+        border-radius: 15px;
+    }
+    .stat-info h3 {
+        font-size: 2rem;
+    }
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+
+    .charts-section {
+        padding: 25px;
+        border-radius: 15px;
+    }
+    .charts-section h2 {
+        font-size: 1.8rem;
+    }
+    .mock-chart {
+        height: 200px;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .tests-table, .reports-list {
+        border-radius: 15px;
+    }
+    th, td {
+        padding: 15px 18px;
+        font-size: 0.9rem;
+    }
+    .tests-table .btn-primary {
+        padding: 8px 15px;
+        font-size: 0.85rem;
+    }
+
+    .chat-container {
+        height: 400px;
+        border-radius: 15px;
+    }
+    .chat-messages {
+        padding: 15px;
+        gap: 10px;
+    }
+    .message-content {
+        padding: 12px 18px;
+        border-radius: 20px;
+    }
+    /* Adjust tail for smaller screens */
+    .message.technician .message-content::before,
+    .message.user .message-content::before {
+        bottom: 3px;
+        border-width: 8px;
+        left: -6px; /* Adjust for technician */
+        right: -6px; /* Adjust for user */
+    }
+
+    .chat-input {
+        flex-direction: column;
+        padding: 15px;
+        gap: 10px;
+        border-radius: 15px;
+    }
+    .message-input, .chat-input .btn-primary {
+        width: 100%;
+        padding: 12px 18px;
+        border-radius: 20px;
+    }
+
+    .join-project-section {
+        padding: 30px;
+        border-radius: 15px;
+    }
+    .join-project-section h2 {
+        font-size: 2rem;
+    }
+    .section-description {
+        font-size: 1rem;
+    }
+    .input-label {
+        font-size: 1rem;
+    }
+    .form-input {
+        padding: 14px 18px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+    }
+    .input-group .btn-primary {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+    .qr-scan-area {
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .qr-icon {
+        font-size: 2.8rem;
+    }
+    .qr-text {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-nav {
+        padding: 0 10px;
+    }
+    .nav-brand h2 {
+        font-size: 1.2rem;
+    }
+    .user-profile {
+        padding: 3px 8px;
+    }
+    .profile-img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .main-layout {
+        padding: 10px;
+    }
+
+    .content-header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+    .breadcrumb {
+        font-size: 0.8rem;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+
+    .project-card, .stat-card, .charts-section, .tests-table, .reports-list,
+    .chat-container, .join-project-section, .project-details-view, .test-group-details-view {
+        border-radius: 12px;
+        padding: 15px;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        font-size: 0.85rem;
+    }
+
+    .chat-messages {
+        padding: 10px;
+    }
+    .message-content {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+    }
+    .message-header {
+        font-size: 0.7rem;
+    }
+    .chat-input {
+        padding: 10px;
+    }
+    .message-input, .chat-input .btn-primary {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+    }
+}
+
+/* --- Utilities --- */
+.text-center {
+    text-align: center;
+}
+.margin-top-large {
+    margin-top: 40px;
+}
+.full-width {
+    width: 100%;
+}
+
+/* ... (Your existing CSS up to .test-result-details-view strong) ... */
+
+.test-result-details-view strong {
+    font-weight: 600; /* Slightly less bold than headings */
+    color: var(--text-primary);
+}
+
+.test-result-details-view .result-section {
+    margin-top: 25px; /* Space above result details */
+    padding: 25px;
+    background: rgba(248, 250, 252, 0.7); /* Lighter background for result block */
+    border-radius: 18px;
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.05); /* Subtle inner shadow */
+}
+
+.test-result-details-view .result-section h3 {
+    font-size: 1.5rem; /* Smaller heading for sub-sections */
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    background: none; /* Remove gradient for sub-headings */
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    background-clip: unset;
+}
+
+.test-result-details-view .status {
+    padding: 6px 15px; /* Adjust padding for status in details */
+    font-size: 0.85rem;
+    border-radius: 20px;
+    display: inline-block; /* Ensure it respects padding and margin */
+    margin-top: 5px; /* Slight space below if text is above */
+}
+
+.no-results-message {
+    text-align: center;
+    padding: 40px;
+    background: rgba(248, 250, 252, 0.5);
+    border: 2px dashed var(--border-color);
+    border-radius: 18px;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    font-style: italic;
+    margin-top: 30px;
+    animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* --- New Exit Animations for Page Transitions --- */
+
+/* Keyframes for sliding out to the left */
+@keyframes slideOutLeft {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+/* Keyframes for sliding out to the right (if content is replaced by new content from right) */
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Keyframes for fading out */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Keyframes for sliding up (for elements appearing from bottom) */
+@keyframes slideOutDown {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+/* Apply these classes via JavaScript */
+.animate-out-left {
+    animation: slideOutLeft 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards; /* Slightly faster exit */
+}
+
+.animate-out-right {
+    animation: slideOutRight 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}
+
+.animate-fade-out {
+    animation: fadeOut 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}
+
+.animate-out-down {
+    animation: slideOutDown 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}
+
+
+/* --- Keyframe Definitions (Ensuring they are present and correct) --- */
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- Responsive Adjustments (Ensuring consistent behavior) --- */
+@media (max-width: 992px) {
+    .main-layout {
+        flex-direction: column;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .sidebar {
+        width: 100%;
+        position: static; /* No longer sticky */
+        height: auto;
+        border-radius: 15px; /* Adjust radius */
+        padding-bottom: 15px;
+    }
+
+    .sidebar.collapsed {
+        width: 100%; /* Full width even when collapsed */
+    }
+
+    .nav-menu {
+        padding: 0 10px;
+        display: flex;
+        flex-wrap: wrap; /* Allow items to wrap */
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .nav-item {
+        margin-bottom: 0; /* Remove vertical margin */
+        flex: 1 1 auto; /* Allow items to grow/shrink */
+        max-width: 150px; /* Limit max width for smaller screens */
+    }
+
+    .nav-link {
+        flex-direction: column; /* Stack icon and text */
+        text-align: center;
+        padding: 12px 8px; /* Adjust padding for stacked content */
+        gap: 5px; /* Smaller gap */
+    }
+
+    .sidebar.collapsed .nav-text {
+        opacity: 1; /* Always show text on small screens */
+        width: auto;
+        overflow: visible;
+        margin-left: 0;
+        font-size: 0.75rem; /* Smaller font for menu text */
+    }
+
+    .icon {
+        font-size: 1.2rem; /* Adjust icon size */
+        min-width: unset;
+    }
+
+    .content-header {
+        margin-bottom: 25px;
+    }
+
+    .content-header h1 {
+        font-size: 2.2rem;
+    }
+
+    .breadcrumb {
+        font-size: 0.95rem;
+    }
+
+    .section-actions {
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .projects-grid, .stats-grid, .test-groups-grid {
+        grid-template-columns: 1fr; /* Stack on smaller screens */
+        gap: 20px;
+    }
+
+    .project-card, .stat-card, .test-group-card, .charts-section, .tests-table, .chat-container,
+    .project-details-view, .test-group-details-view, .test-result-details-view {
+        padding: 25px; /* Reduce padding */
+        border-radius: 18px; /* Adjust radius */
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2.2rem;
+    }
+
+    .stat-info h3 {
+        font-size: 2rem;
+    }
+
+    .mock-chart {
+        height: 200px; /* Shorter chart */
+    }
+
+    .chat-container {
+        height: 500px; /* Shorter chat */
+    }
+
+    .chat-messages {
+        padding: 20px;
+    }
+
+    .message {
+        max-width: 85%;
+    }
+
+    .chat-input {
+        padding: 15px 20px;
+    }
+
+    .message-input, .chat-input .btn-primary {
+        padding: 12px 18px; /* Adjust input and button padding */
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .top-nav {
+        padding: 0 20px;
+        height: 60px;
+    }
+
+    .nav-brand h2 {
+        font-size: 1.5rem;
+    }
+
+    .user-profile {
+        padding: 8px 15px;
+        gap: 8px;
+    }
+
+    .profile-img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .main-layout {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .content-header h1 {
+        font-size: 2rem;
+    }
+
+    .breadcrumb {
+        font-size: 0.9rem;
+        gap: 5px;
+    }
+    .breadcrumb span:not(:last-child)::after {
+        margin-left: 5px;
+    }
+
+    .btn {
+        padding: 12px 22px;
+        font-size: 0.9rem;
+    }
+
+    .project-card, .stat-card, .test-group-card, .charts-section, .tests-table, .chat-container,
+    .project-details-view, .test-group-details-view, .test-result-details-view {
+        padding: 20px;
+    }
+
+    .card-header h3 {
+        font-size: 1.3rem;
+    }
+
+    .status {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.8rem;
+    }
+
+    .stat-info p {
+        font-size: 1rem;
+    }
+
+    .tests-table th, .tests-table td {
+        padding: 15px 20px;
+        font-size: 0.9rem;
+    }
+
+    .chat-messages {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .message-content {
+        padding: 12px 18px;
+        font-size: 0.9rem;
+    }
+
+    .chat-input {
+        flex-direction: column; /* Stack input and button */
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .message-input {
+        width: 100%;
+    }
+
+    .chat-input .btn-primary {
+        width: 100%; /* Full width button */
+    }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
+/* Styles for the overall chart container */
+.mock-chart {
+    display: flex; /* Use flexbox for horizontal arrangement of bars */
+    justify-content: space-around; /* Distribute items evenly with space around them */
+    align-items: flex-end; /* Bars start from the bottom of the container */
+    height: 350px; /* Set the overall height of your graph area. Adjust as needed. */
+    background-color: #f8f9fa; /* Light background for the chart area */
+    border: 1px solid #eee; /* Subtle border */
+    border-radius: 8px; /* Rounded corners for the chart container */
+    padding: 1rem; /* Padding inside the chart area */
+    gap: 0.5rem; /* Space between individual chart bars/containers */
+    overflow-x: auto; /* Enable horizontal scrolling if there are too many bars */
+}
+
+/* Styles for each individual bar and its label wrapper */
+.chart-container {
+    display: flex;
+    flex-direction: column; /* Stack bar and label vertically */
+    align-items: center; /* Center the bar and label horizontally within its container */
+    min-width: 100px; /* Ensure bars have a readable minimum width */
+    max-width: 150px; /* Optional: Set a maximum width for bars to prevent overstretching */
+    text-align: center; /* Center text within the label */
+    height: 100%;
+    flex-shrink: 0; /* Prevent individual chart containers from shrinking too much */
+}
+
+/* Styles for the bar itself */
+.chart-bar {
+    width: 70%; /* Width of the bar relative to its .chart-container */
+    /* background-color: #3498db; */ /* Solid color option */
+    /* Using a gradient similar to your progress bar for consistency */
+    background: linear-gradient(to right, #6a82fb, #fc5c7d); /* Example gradient */
+    border-radius: 3px 3px 0 0; /* Rounded top corners, flat bottom */
+    transition: height 0.3s ease-out; /* Smooth animation for height changes */
+    position: relative; /* Needed for positioning the score text */
+    display: flex; /* Use flex to center score text vertically */
+    justify-content: center; /* Center score text horizontally */
+    align-items: flex-start; /* Position score text at the top of the bar */
+    color: white; /* Color for the score text if it's inside the bar */
+    font-size: 0.8em;
+    font-weight: bold;
+    padding-top: 5px; /* Space for the score text above the bar fill */
+
+    /* If you are using the scaled height (MIN_HEIGHT_PERCENT, MAX_HEIGHT_PERCENT)
+       in your TypeScript, you *don't* strictly need a min-height here for visibility.
+       However, if you want a *visual minimum* even lower than what the scaling produces,
+       or if you remove the scaling, you might re-introduce it.
+    */
+    /* min-height: 10px; */ /* Example: ensure bar is at least 10px tall */
+}
+
+/* Styles for the percentage score text displayed on/above the bar */
+.bar-score {
+    position: absolute;
+    top: -1.5em; /* Position above the bar. Adjust if it overlaps the label below. */
+    color: #333; /* Darker color to stand out against background */
+    font-size: 0.8rem;
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white background */
+    padding: 2px 4px;
+    border-radius: 3px;
+    white-space: nowrap; /* Prevent text from wrapping */
+    z-index: 10; /* Ensure it's above other elements */
+    display: none; /* Hidden by default */
+}
+
+/* Show the score on hover over the bar */
+.chart-bar:hover .bar-score {
+    display: block; /* Show on hover */
+}
+
+/* Styles for the project name label below the bar */
+.chart-label {
+    margin-top: 0.5rem; /* Space between the bar and the label */
+    font-size: 0.85rem;
+    color: #555;
+    word-break: break-word; /* Allow long project names to wrap */
+    max-width: 100%; /* Ensure the label doesn't overflow its container */
+    text-overflow: ellipsis; /* Add ellipsis for very long names */
+    overflow: hidden; /* Hide overflow */
+    white-space: nowrap; /* Prevent line breaks unless forced by word-break */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .chart-label {
+    font-size: 0.7rem; /* Smaller font for labels on small screens */
+  }
+  .chart-container {
+    min-width: 80px; /* Adjust minimum width for bars on small screens */
+  }
+  .bar-score {
+    font-size: 0.7rem;
+  }
+}
+
+/* You might want to keep some general styling for the section containing the chart */
+.charts-section {
+    background-color: #ffffff; /* White background for the card */
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center; /* Center the title */
+}
+
+.charts-section h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Style for the container around the canvas. This is important for setting the chart's dimensions. */
+/* The inline style `height: 350px; width: 100%;` on the div wrapping the canvas in HTML will take precedence */
+/* But if you prefer to control it via CSS: */
+/* .charts-section > div { */
+/* height: 350px; */
+/* width: 100%; */
+/* } */
+
+.no-data-message {
+    text-align: center;
+    color: #777;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* Styles for Join Project Section */
+.join-project-section {
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  max-width: 600px;
+  margin: 30px auto;
+  text-align: center;
+}
+
+.join-project-section h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.join-project-section .section-description {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 0.95em;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.input-label {
+  align-self: flex-start; /* Align label to the left */
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #444;
+}
+
+.form-input {
+  width: 100%; /* Fill available width */
+  max-width: 350px; /* Limit input width */
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  margin-bottom: 15px; /* Space between input and button */
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.form-input:focus {
+  border-color: #6a82fb;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(106, 130, 251, 0.2);
+}
+
+.btn {
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex; /* For icon alignment */
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Space between icon and text */
+}
+
+.btn-primary {
+  background-color: #6a82fb; /* Primary color */
+  color: #fff;
+  border: none;
+}
+
+.btn-primary:hover:not([disabled]) {
+  background-color: #556ee6; /* Darker on hover */
+}
+
+.btn-primary[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.divider {
+  margin: 30px 0;
+  position: relative;
+  text-align: center;
+  color: #999;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background-color: #eee;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+.divider span {
+  background-color: #f8f9fa;
+  padding: 0 15px;
+  position: relative;
+  z-index: 1; /* Ensure text is above lines */
+}
+
+.qr-scan-area {
+  margin-top: 30px;
+}
+
+.scan-text {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #555;
+  border: 1px solid #ccc;
+}
+
+.btn-secondary:hover:not([disabled]) {
+  background-color: #e0e0e0;
+  border-color: #bbb;
+}
+
+.qr-scanner-placeholder {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  color: #888;
+  text-align: center;
+  min-height: 200px; /* Give it some height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Messages */
+.success-message {
+  color: #28a745; /* Green for success */
+  font-weight: 500;
+  margin-top: 15px;
+}
+
+.error-message {
+  color: #dc3545; /* Red for error */
+  font-weight: 500;
+  margin-top: 15px;
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 600px) {
+  .join-project-section {
+    padding: 20px;
+    margin: 20px auto;
+  }
+}
+
+/* client.component.css */
+
+.reports-section {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.reports-section h2 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.reports-section .section-description {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 20px;
+  color: #6a82fb; /* Primary color */
+  font-size: 1.2em;
+}
+
+.reports-table-container {
+  margin-top: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden; /* For rounded corners on table */
+}
+
+.table th, .table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #eef2f9; /* Light background for headers */
+  color: #333;
+  font-weight: 600;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 0.85em;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+.btn-info {
+    margin: 5px;
+  background-color: #17a2b8; /* Bootstrap info color */
+  color: #fff;
+  border: 1px solid #17a2b8;
+}
+
+.btn-success {
+  background-color: #28a745; /* Bootstrap success color */
+  color: #fff;
+  border: 1px solid #28a745;
+}
+
+.btn-info:hover, .btn-success:hover {
+  opacity: 0.9;
+}
+
+.no-reports-message, .no-project-selected-message {
+  padding: 20px;
+  text-align: center;
+  color: #888;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  margin-top: 20px;
+  background-color: #fdfdfd;
+}
+
+.mt-4 {
+  margin-top: 1.5rem !important; /* Spacing utility */
+}
+
+.me-2 {
+  margin-right: 0.5rem !important; /* Spacing utility */
+}
+
+.chat-section {
+  padding: 20px;
+}
+.chat-container {
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 600px; /* Adjust height as needed */
+}
+.chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+.message {
+  display: flex;
+  margin-bottom: 10px;
+}
+.message-content {
+  max-width: 70%;
+  padding: 8px 12px;
+  border-radius: 15px;
+  word-wrap: break-word;
+}
+.message.current-user {
+  justify-content: flex-end; /* Align to right for current user */
+}
+.message.current-user .message-content {
+  background-color: #007bff; /* Primary blue for current user */
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+.message.other-user {
+  justify-content: flex-start; /* Align to left for other users */
+}
+.message.other-user .message-content {
+  background-color: #e2e6ea; /* Light gray for others */
+  color: #343a40;
+  border-bottom-left-radius: 2px;
+}
+.message-header {
+  font-size: 0.8em;
+  color: #6c757d;
+  margin-bottom: 3px;
+}
+.message.current-user .message-header {
+  text-align: right;
+}
+.timestamp {
+  margin-left: 8px;
+  font-size: 0.7em;
+  color: #adb5bd;
+}
+.chat-input {
+  display: flex;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+.message-input {
+  flex-grow: 1;
+}
+.no-chat-selected, .no-messages {
+  padding: 20px;
+  font-style: italic;
+}
+.loading-spinner {
+    padding: 20px;
+}
+

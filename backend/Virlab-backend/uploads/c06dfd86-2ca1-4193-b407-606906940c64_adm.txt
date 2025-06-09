@@ -1,0 +1,235 @@
+1364  sudo apt update
+ 1365  echo ?
+ 1366  sudo apt install xrdp
+ 1367  sudo systemctl start xrdp
+ 1368  sudo systemctl status xrdp
+ 1369  sudo apt install openssh-server
+ 1370  sudo systemctl start ssh
+ 1371  sudo ufw allow ssh
+ 1372  sudo systemctl status ssh
+ 1373  sudo systemctl enable  ssh
+ 1374  ip a
+ 1375  sudo apt install openshh-server
+ 1376  sudo systemctl start ssh
+ 1377  sudo ufw allow ssh
+ 1378  ip a
+ 1379  sudo systemctl enable  ssh
+ 1380  ip a
+ 1381  sudo systemctl status ssh
+ 1382  ip a
+ 1383  sudo ufw allow ssh
+ 1384  sudo systemctl status xrdp
+ 1385  ip a
+ 1386  sudo ufw allow ssh
+ 1387  sudo systemctl enable  ssh
+ 1388  sudo systemctl start ssh
+ 1389  sudo ufw allow ssh
+ 1390  ip a
+ 1391  sudo apt update
+ 1392  ls
+ 1393  clear
+ 1394  mkdir -p dos1 dos2
+ 1395  ls
+ 1396  cd dos1
+ 1397  ls
+ 1398  cd ./
+ 1399  cd .
+ 1400  cd ../
+ 1401  mkdir ?
+ 1402  mkdir -help
+ 1403  mkdir --help
+ 1404  mkdir -p do1,do2
+ 1405  ls
+ 1406  cd do1
+ 1407  mkdir -p fo1/fo2
+ 1408  ls
+ 1409  cd fo1
+ 1410  ls
+ 1411  cd ../
+ 1412  clear
+ 1413  cd Ma_maison/premier_etage/cuisine/potager/placard/
+ 1414  cd Ma_maison/premier_etage/cuisine/potager/placard
+ 1415  mkdir Ma_maison/premier_etage/cuisine/potager/placard
+ 1416  mkdir Ma_maison/premier_etage/cuisine/potager/placard/
+ 1417  mkdir -p Ma_maison/premier_etage/cuisine/potager/placard/
+ 1418  mkdir -p premier_etage/suite_parentale
+ 1419  ls
+ 1420  rm premier_etage
+ 1421  rmd premier_etage
+ 1422  cd Ma_maison/premier_etage
+ 1423  ls
+ 1424  mkdir suite_parentale
+ 1425  ls
+ 1426  mkdir -p chambre_enfants/bureau
+ 1427  cd chambre_enfants/bureau
+ 1428  mkdir mes_favoris
+ 1429  cd ~
+ 1430  touch Ma_maison/rdc.pdf
+ 1431  cd Ma_maison/premier_etage
+ 1432  cd chambre_enfants/bureau
+ 1433  touch devoirs.txt
+ 1434  touch mes_favoris/pelluche.jpg
+ 1435  touch piano.mp4
+ 1436  ls
+ 1437  cd mes_favoris
+ 1438  ls
+ 1439  touch mes_fvoris/piano.mp4
+ 1440  touch piano.mp4
+ 1441  ls
+ 1442  cd ~
+ 1443  cd Ma_maison/premier_etage/chambre_enfants/bureau
+ 1444  vi devoirs.txt
+ 1445  cat devoirs.txt
+ 1446  cat /etc/os-release
+ 1447  cd ~
+ 1448  cd a_maison/premier_etage
+ 1449  cd Ma_maison/premier_etage
+ 1450  ls
+ 1451  cd chambre_enfants/bureau/
+ 1452  cd usr/share/doc
+ 1453  cd ../
+ 1454  cd ../..
+ 1455  cd premier_etage/
+ 1456  cd usr/share:doc
+ 1457  cd usr/share/doc
+ 1458  cd usr/share/doc/
+ 1459  cd &
+ 1460  cd ~
+ 1461  cd usr/share/doc
+ 1462  cd .local/
+ 1463  cd ~
+ 1464  cd .local/~
+ 1465  cd .local/
+ 1466  cd ~
+ 1467  cd user/share/doc
+ 1468  cat /etc/login.defs
+ 1469  cd /
+ 1470  ls -lr
+ 1471  cd .local/~
+ 1472  cd .local/
+ 1473  cd ~
+ 1474  less --help
+ 1475  less /etc/login.defs
+ 1476  nano /etc/login.defs
+ 1477  wc /etc/login.defs
+ 1478  w /etc/login.defs
+ 1479  wc -l /etc/login.defs
+ 1480  touch Ma_maison/premier_etage/cuisine/potager/placard/cartable.html
+ 1481  cd Ma_maison/premier_etage/cuisine/potager/placard
+ 1482  ls
+ 1483  mv cartable.html Ma_maison/premier_etage/chambre_enfants/bureau/mes_favoris
+ 1484  cd ~
+ 1485  mv cartable.html Ma_maison/premier_etage/cuisine/potager/placard Ma_maison/premier_etage/chambre_enfants/bureau/mes_favoris
+ 1486  mv cartable.html Ma_maison/premier_etage/cuisine/potager/placard Ma_maison/premier_etage/chambre_enfants/bureau/mes_favoris/
+ 1487  cd Ma_maison/premier_etage/cuisine/potager/placard
+ 1488  cd Ma_maison/premier_etage/cuisine/
+ 1489  mv cartable.html potager/placard bureau/mes_favoris/
+ 1490  mv cartable.html potager/placard bureau/mes_favoris
+ 1491  mv cartable.html potager/placard /bureau/mes_favoris
+ 1492  mv cartable.html potager/placard ../bureau/mes_favoris
+ 1493  mv cartable.html potager/placard ../chambre_enfants/bureau/mes_favoris
+ 1494  mv cartable.html potager/placard ./chambre_enfants/bureau/mes_favoris
+ 1495  mv cartable.html potager/placard ../chambre_enfants/bureau/mes_favoris
+ 1496  cd ../
+ 1497  mv cartable.html cuisine/potager/placard chambre_enfants/bureau/mes_favoris
+ 1498  mv cartable.html /cuisine/potager/placard chambre_enfants/bureau/mes_favoris
+ 1499  cd ~
+ 1500  mv ~/Ma_maison/premier_etage/cuisine/placard/cartable.html ~/Ma_maison/premier_etage/bureau/mes_favoris/
+ 1501  mv Ma_maison/premier_etage/cuisine/placard/cartable.html ~/Ma_maison/premier_etage/bureau/mes_favoris/
+ 1502  mv Ma_maison/premier_etage/cuisine/potager/placard/cartable.html ~/Ma_maison/premier_etage/chambre_enfants/bureau/mes_favoris/
+ 1503  cd Ma_maison/premier_etage/cuisine
+ 1504  cd potager/placard
+ 1505  ls
+ 1506  cd potager
+ 1507  ls
+ 1508  mkdir placard
+ 1509  ls
+ 1510  cd placard
+ 1511  touch cartable.html
+ 1512  ls
+ 1513  cd ~
+ 1514  mv Ma_maison/premier_etage/cuisine/potager/placard/cartable.html ~/Ma_maison/premier_etage/chambre_enfants/bureau/mes_favoris/
+ 1515  cd Ma_maison/premier_etage/cuisine
+ 1516  cd ../
+ 1517  cd chambre_enfants/bureau/mes_favoris/
+ 1518  ls
+ 1519  cd ~
+ 1520  mkdir mybins
+ 1521  cp -r /bin/ls /mybins
+ 1522  cp  /bin/ls /mybins
+ 1523  cp  bin/ls /mybins
+ 1524  cp  /bin/ls ~/mybins
+ 1525  cd mybins
+ 1526  ls
+ 1527  cp /bin/ls /bin/pwd ~/mybins/
+ 1528  ls
+ 1529  ls -l
+ 1530  cat ls
+ 1531  cd ~
+ 1532  mkdir ~/second
+ 1533  ls
+ 1534  cd chambre_enfants/bureau/mes_favoris/
+ 1535  cd Ma_maison/premier_etage/cuisine/
+ 1536  cd ../
+ 1537  cd chambre_enfants/bureau/mes_favoris/
+ 1538  mv mes_favoris mon_espace
+ 1539  cd ../
+ 1540  mv /mes_favoris /mon_espace
+ 1541  ls
+ 1542  cd ~
+ 1543  mv ~/Ma_maison/premier_etage/bureau/mes_favoris ~/Ma_maison/premier_etage/bureau/mon_espace
+ 1544  mv ~/Ma_maison/premier_etage/chambre_enfants/bureau/mes_favoris ~/Ma_maison/premier_etage/chambre_enfants/bureau/mon_espace
+ 1545  mv /mes_favoris /mon_espace
+ 1546  cp /bin/ls /bin/pwd ~/mybins/
+ 1547  ls
+ 1548  mkadir ~/second
+ 1549  mkdir ~/second
+ 1550  mkdir second
+ 1551  ls
+ 1552  cp ~/Ma_maison/premier_etage/chambre_enfants/bureau/mon_espace ~/my_space
+ 1553  cp -r ~/Ma_maison/premier_etage/chambre_enfants/bureau/mon_espace ~/my_space
+ 1554  ls
+ 1555  cd my_space
+ 1556  ls
+ 1557  cd ../
+ 1558  rm fk
+ 1559  ls
+ 1560  rm ~/Ma_maison/premier_etage/chambre_enfants/bureau/mon_space/cartable.html
+ 1561  rm Ma_maison/premier_etage/chambre_enfants/bureau/mon_space/cartable.html
+ 1562  rm Ma_maison/premier_etage/chambre_enfants/bureau/mon_space/cartable
+ 1563  rm Ma_maison/premier_etage/chambre_enfants/bureau/mon_espace/cartable
+ 1564  rm Ma_maison/premier_etage/chambre_enfants/bureau/mon_espace/cartable.html
+ 1565  rmdir -p ~/my_space
+ 1566  rmdir -p /my_space
+ 1567  rmdir -p my_space
+ 1568  ls
+ 1569  rmdir -p my_space
+ 1570  ls my_space
+ 1571  rm -p my_space
+ 1572  rm --p my_space
+ 1573  rmv --p my_space
+ 1574  rm -r my_space
+ 1575  ls
+ 1576  cd
+ 1577  clear
+ 1578  sudo
+ 1579  cd /
+ 1580  sudo 
+ 1581  sudo useradd etud
+ 1582  sudo groupadd genie_info
+ 1583  cat /etc/group
+ 1584  sudo usermod -aG geni_info etud
+ 1585  sudo usermod -aG genie_info etud
+ 1586  cat /etc/group
+ 1587  su
+ 1588  su etud
+ 1589  su -c "whoami" etud
+ 1590  sudo passwd etud
+ 1591  su -c "whoami" etud
+ 1592  su -c "id" etud
+ 1593  su -c "groups" etud
+ 1594  ls
+ 1595  clear
+ 1596  history
+codeayoub@codeayoub:~$ 
+

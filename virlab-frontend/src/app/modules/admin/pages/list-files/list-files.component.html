@@ -1,0 +1,9 @@
+<h2>Fichiers du projet</h2>
+<input type="number" [(ngModel)]="projectId" placeholder="ID du projet">
+<button (click)="fetchFiles()">Charger les fichiers</button>
+
+<ul>
+  <li *ngFor="let file of files">
+    {{ file.fileName }}
+  </li>
+</ul>

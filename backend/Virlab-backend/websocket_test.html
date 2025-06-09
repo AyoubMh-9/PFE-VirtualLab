@@ -1,0 +1,263 @@
+// Afficher si un token existe déjà et vérifier si le serveur est disponible
+<script>
+  window.onload = function() {
+      const token = localStorage.getItem("token");
+      if (token) {
+        addMessage("Token trouvé dans localStorage", "success");
+        document.getElementById("tokenInput").value = token;
+      } else {
+        addMessage("Aucun token dans localStorage", "error");
+      }
+      
+      // Vérifier si le serveur est disponible
+      fetch('http://localhost:8080/', { mode: 'no-cors' })
+        .then(() => {
+          addMessage("Serveur HTTP détecté sur http://localhost:8080/", "success");
+        })
+        .catch(() => {
+          addMessage("ATTENTION: Serveur HTTP non détecté sur http://localhost:8080/", "error");
+        });
+    };
+</script>
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket Test Client</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    button { padding: 8px 12px; margin: 5px; cursor: pointer; }
+    .messages { 
+      margin-top: 20px; 
+      border: 1px solid #ccc; 
+      padding: 10px; 
+      height: 300px; 
+      overflow-y: auto; 
+    }
+    .success { color: green; }
+    .error { color: red; }
+    input { padding: 8px; width: 300px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>WebSocket Test</h2>
+    
+    <div>
+      <label for="serverUrl">URL du serveur WebSocket:</label><br>
+      <select id="serverUrl" style="width: 320px; padding: 8px;">
+        <option value="ws://localhost:8080/ws">ws://localhost:8080/ws</option>
+        <option value="ws://localhost:8080/websocket">ws://localhost:8080/websocket</option>
+        <option value="ws://localhost:8080/socket">ws://localhost:8080/socket</option>
+        <option value="ws://localhost:8080/app/ws">ws://localhost:8080/app/ws</option>
+        <option value="ws://localhost:8080/stomp">ws://localhost:8080/stomp</option>
+        <option value="ws://localhost:8080/ws/websocket">ws://localhost:8080/ws/websocket</option>
+        <option value="ws://localhost:8080/websocket/websocket">ws://localhost:8080/websocket/websocket</option>
+      </select>
+      <input type="text" id="customUrl" placeholder="URL personnalisée" style="width: 300px; margin-top: 5px;">
+      <button onclick="useCustomUrl()">Utiliser URL personnalisée</button>
+    </div>
+    
+    <div>
+      <label for="tokenInput">Token JWT (optionnel):</label><br>
+      <input type="text" id="tokenInput" placeholder="Entrez votre token JWT ici">
+      <button onclick="saveToken()">Sauvegarder Token</button>
+    </div>
+    
+    <div>
+      <p>Status: <span id="status">Déconnecté</span></p>
+      <button onclick="connect()">Connect</button>
+      <button onclick="disconnect()">Disconnect</button>
+      <button onclick="sendMessage()">Send Message</button>
+      <button onclick="testAllEndpoints()">Tester tous les endpoints</button>
+    </div>
+    
+    <div>
+      <label for="messageInput">Message personnalisé:</label><br>
+      <input type="text" id="messageInput" placeholder="Entrez votre message ici" value="Hello from client">
+    </div>
+    
+    <div class="messages" id="messages">
+      <p>Logs de connexion et messages apparaîtront ici...</p>
+    </div>
+  </div>
+  
+  <script>
+    let client = null;
+    
+    function useCustomUrl() {
+      const customUrl = document.getElementById("customUrl").value;
+      if (customUrl) {
+        const select = document.getElementById("serverUrl");
+        // Vérifier si l'option existe déjà
+        let exists = false;
+        for (let i = 0; i < select.options.length; i++) {
+          if (select.options[i].value === customUrl) {
+            select.selectedIndex = i;
+            exists = true;
+            break;
+          }
+        }
+        
+        // Si l'option n'existe pas, l'ajouter
+        if (!exists) {
+          const option = document.createElement("option");
+          option.value = customUrl;
+          option.text = customUrl;
+          select.add(option);
+          select.selectedIndex = select.options.length - 1;
+        }
+        
+        addMessage("URL personnalisée définie: " + customUrl, "success");
+      } else {
+        addMessage("Veuillez entrer une URL personnalisée", "error");
+      }
+    }
+    
+    function saveToken() {
+      const token = document.getElementById("tokenInput").value;
+      if (token) {
+        localStorage.setItem("token", token);
+        addMessage("Token sauvegardé dans localStorage", "success");
+      } else {
+        addMessage("Aucun token saisi", "error");
+      }
+    }
+    
+    function testAllEndpoints() {
+      const endpoints = [
+        "ws://localhost:8080/ws",
+        "ws://localhost:8080/websocket",
+        "ws://localhost:8080/socket",
+        "ws://localhost:8080/app/ws",
+        "ws://localhost:8080/stomp",
+        "ws://localhost:8080/ws/websocket",
+        "ws://localhost:8080/websocket/websocket"
+      ];
+      
+      addMessage("Test de tous les endpoints...", "success");
+      
+      endpoints.forEach((url, index) => {
+        setTimeout(() => {
+          testEndpoint(url);
+        }, index * 1000); // Tester chaque endpoint avec un délai de 1 seconde
+      });
+    }
+    
+    function testEndpoint(url) {
+      addMessage("Test de connexion à " + url + "...");
+      
+      try {
+        const testSocket = new WebSocket(url);
+        
+        testSocket.onopen = function() {
+          addMessage("✅ Connexion réussie à " + url, "success");
+          testSocket.close();
+        };
+        
+        testSocket.onerror = function() {
+          addMessage("❌ Échec de connexion à " + url, "error");
+        };
+        
+        testSocket.onclose = function() {
+          console.log("Test socket closed for " + url);
+        };
+      } catch(e) {
+        addMessage("❌ Erreur lors du test de " + url + ": " + e.message, "error");
+      }
+    }
+    
+    function connect() {
+      const token = localStorage.getItem("token");
+      const serverUrl = document.getElementById("serverUrl").value;
+      
+      if (!serverUrl) {
+        addMessage("URL du serveur manquante", "error");
+        return;
+      }
+      
+      try {
+        addMessage("Tentative de connexion à " + serverUrl + "...");
+        document.getElementById("status").textContent = "Connexion en cours...";
+        
+        const socket = new WebSocket(serverUrl);
+        
+        socket.onopen = function() {
+          addMessage("WebSocket connecté à " + serverUrl, "success");
+          document.getElementById("status").textContent = "Connecté";
+        };
+        
+        socket.onclose = function(evt) {
+          document.getElementById("status").textContent = "WebSocket fermé";
+          addMessage("WebSocket fermé: Code " + evt.code + (evt.reason ? " - " + evt.reason : ""), "error");
+        };
+        
+        socket.onerror = function(evt) {
+          document.getElementById("status").textContent = "Erreur WebSocket";
+          addMessage("Erreur WebSocket", "error");
+          console.error("WebSocket error", evt);
+        };
+        
+        socket.onmessage = function(evt) {
+          addMessage("Message reçu (brut): " + evt.data);
+          try {
+            const parsed = JSON.parse(evt.data);
+            addMessage("Message reçu (JSON): " + JSON.stringify(parsed, null, 2));
+          } catch(e) {
+            // Le message n'est pas du JSON, c'est déjà affiché en brut
+          }
+        };
+        
+        client = socket;
+      } catch (e) {
+        document.getElementById("status").textContent = "Erreur de connexion";
+        addMessage("Erreur lors de la création du WebSocket: " + e.message, "error");
+      }
+    }
+    
+    function disconnect() {
+      if (client) {
+        client.close();
+        client = null;
+        document.getElementById("status").textContent = "Déconnecté";
+        addMessage("Déconnecté du serveur", "success");
+      } else {
+        addMessage("Pas de connexion active", "error");
+      }
+    }
+    
+    function sendMessage() {
+      if (!client) {
+        addMessage("Impossible d'envoyer le message: non connecté", "error");
+        return;
+      }
+      
+      const messageText = document.getElementById("messageInput").value || "Hello from client";
+      const message = { message: messageText };
+      
+      try {
+        client.send(JSON.stringify(message));
+        addMessage("Message envoyé: " + messageText);
+        console.log("Sent: ", message);
+      } catch (e) {
+        addMessage("Erreur lors de l'envoi du message: " + e.message, "error");
+      }
+    }
+    
+    function addMessage(text, type) {
+      const messageElement = document.createElement("p");
+      messageElement.textContent = text;
+      if (type) {
+        messageElement.classList.add(type);
+      }
+      document.getElementById("messages").appendChild(messageElement);
+      
+      // Auto-scroll to bottom
+      const messagesDiv = document.getElementById("messages");
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  </script>
+</body>
+</html>

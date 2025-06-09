@@ -1,0 +1,13 @@
+<h2>Uploader un fichier</h2>
+<form (submit)="onSubmit()">
+  <input type="file" (change)="onFileSelected($event)">
+  <select [(ngModel)]="userId" name="user">
+    <option [value]="1">User 1</option>
+    <option [value]="2">User 2</option>
+  </select>
+  <select [(ngModel)]="projectId" name="project">
+    <option [value]="1">Project 1</option>
+    <option [value]="2">Project 2</option>
+  </select>
+  <button type="submit">Upload</button>
+</form>

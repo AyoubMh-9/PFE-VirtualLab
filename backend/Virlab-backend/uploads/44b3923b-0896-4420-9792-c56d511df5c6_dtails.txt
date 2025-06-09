@@ -1,0 +1,15 @@
+Models : 
+  User 
+  Project
+Controllers : 
+  addProject
+  joinProject
+  deleteAccount
+  updatePassword
+  updateProfile
+Views : 
+  create.html
+  join.html
+  profile.html
+  
+  
