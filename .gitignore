@@ -1,0 +1,33 @@
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# IDE files (e.g., IntelliJ, VS Code)
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+
+# Node.js specific (for the node_modules directly in PFE if applicable, and general ignores)
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts (if any build happens at the root level)
+dist/
+build/
+target/
+
+# Logs
+*.log
+logs/
+
+# Sensitive configuration files (if any are at the root, e.g., a .env file)
+.env
+*.env
